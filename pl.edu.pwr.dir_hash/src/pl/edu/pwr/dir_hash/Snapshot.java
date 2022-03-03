@@ -1,0 +1,89 @@
+package pl.edu.pwr.dir_hash;
+
+import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+/**
+ * This class represents a snapshot of directory.
+ */
+public class Snapshot implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    // Hashmap containing paths of files in directory and their corresponding MD5 checksum
+    private HashMap<String, byte[]> directorySnapshot;
+
+
+    public Snapshot(String path) {
+        Path dirPath = FileSystems.getDefault().getPath(path);
+        if (!dirPath.toFile().isDirectory())
+            throw new IllegalArgumentException("Constructor only allows directory paths.");
+        try {
+            ChecksumVisitor visitor = new ChecksumVisitor();
+            Files.walkFileTree(dirPath, visitor);
+            this.directorySnapshot = visitor.getCheckSums();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Function that compares 2 directory snapshots and returns filenames of changed files.
+     *
+     * @param s1 First directory snapshot to compare.
+     * @param s2 Second directory snapshot to compare.
+     * @return Filenames of changed files.
+     */
+    public static ArrayList<String> dirCmp(Snapshot s1, Snapshot s2) {
+        var map1 = s1.getDirectorySnapshot();
+        var map2 = s2.getDirectorySnapshot();
+
+        ArrayList<String> modified = new ArrayList<>();
+
+        map1.forEach((s, bytes) -> {
+            if (!map2.containsKey(s)) {
+                modified.add(s);
+                return;
+            }
+            var toCmp = map2.get(s);
+            if (!Arrays.equals(bytes, toCmp)) {
+                modified.add(s);
+            }
+        });
+
+        map2.forEach((s, bytes) -> {
+            if (!map1.containsKey(s) && !modified.contains(s)) {
+                modified.add(s);
+            }
+        });
+
+        return modified;
+    }
+
+    public HashMap<String, byte[]> getDirectorySnapshot() {
+        return directorySnapshot;
+    }
+
+    public static void saveSnapshotToFile(Path path, Snapshot snapshot) {
+        try (ObjectOutputStream objectStream = new ObjectOutputStream(Files.newOutputStream(path))) {
+            objectStream.writeObject(snapshot);
+        } catch (IOException e) {
+            System.out.println("Could not write object to file, please make sure the correct path was given.");
+        }
+    }
+
+    public static Snapshot loadSnapshotFromFile(Path path){
+        try (ObjectInputStream objectStream = new ObjectInputStream(Files.newInputStream(path))){
+            return (Snapshot) objectStream.readObject();
+        } catch (IOException e) {
+            System.out.println("Could not write object to file, please make sure the correct path was given.");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Data stored in this file could not be interpreted as Snapshot object");
+        }
+        return null;
+    }
+}
