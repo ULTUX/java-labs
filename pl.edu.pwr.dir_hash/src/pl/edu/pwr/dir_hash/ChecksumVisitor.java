@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Class used to fetch all files in a file tree and to compute their MD5 checksum.
  * Computed files checksum can be retrieved using getResults function.
  */
-public class ChecksumVisitor extends SimpleFileVisitor<Path> {
+class ChecksumVisitor extends SimpleFileVisitor<Path> {
     private HashMap<String, byte[]> checkSums = new HashMap<>();
 
 

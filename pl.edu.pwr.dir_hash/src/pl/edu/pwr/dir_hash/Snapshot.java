@@ -16,6 +16,7 @@ public class Snapshot implements Serializable {
 
     // Hashmap containing paths of files in directory and their corresponding MD5 checksum
     private HashMap<String, byte[]> directorySnapshot;
+    private String directory;
 
 
     public Snapshot(String path) {
@@ -26,6 +27,7 @@ public class Snapshot implements Serializable {
             ChecksumVisitor visitor = new ChecksumVisitor();
             Files.walkFileTree(dirPath, visitor);
             this.directorySnapshot = visitor.getCheckSums();
+            this.directory = dirPath.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,22 +70,29 @@ public class Snapshot implements Serializable {
         return directorySnapshot;
     }
 
-    public static void saveSnapshotToFile(Path path, Snapshot snapshot) {
+    public static void saveSnapshotToFile(Path path, Snapshot snapshot) throws Exception {
         try (ObjectOutputStream objectStream = new ObjectOutputStream(Files.newOutputStream(path))) {
             objectStream.writeObject(snapshot);
         } catch (IOException e) {
-            System.out.println("Could not write object to file, please make sure the correct path was given.");
+            e.printStackTrace();
+            throw new Exception("Could not write object to file, please make sure the correct path was given.");
         }
     }
 
-    public static Snapshot loadSnapshotFromFile(Path path){
+    public static Snapshot loadSnapshotFromFile(Path path) throws Exception {
         try (ObjectInputStream objectStream = new ObjectInputStream(Files.newInputStream(path))){
-            return (Snapshot) objectStream.readObject();
-        } catch (IOException e) {
-            System.out.println("Could not write object to file, please make sure the correct path was given.");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Data stored in this file could not be interpreted as Snapshot object");
+            Snapshot snap = (Snapshot) objectStream.readObject();
+            if (snap != null){
+                return snap;
+            }
+            else throw new Exception("File was probably empty");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Wrong file selected");
         }
-        return null;
+    }
+
+    public String getDirectory() {
+        return directory;
     }
 }
