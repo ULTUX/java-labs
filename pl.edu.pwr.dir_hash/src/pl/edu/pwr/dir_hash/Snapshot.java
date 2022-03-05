@@ -19,6 +19,10 @@ public class Snapshot implements Serializable {
     private String directory;
 
 
+    /**
+     * Create new Snapshot object.
+     * @param path Base directory for Snapshot.
+     */
     public Snapshot(String path) {
         Path dirPath = FileSystems.getDefault().getPath(path);
         if (!dirPath.toFile().isDirectory())
@@ -70,6 +74,12 @@ public class Snapshot implements Serializable {
         return directorySnapshot;
     }
 
+    /**
+     * Serialize Snapshot object and write it to file.
+     * @param path Path to which write the object.
+     * @param snapshot Snapshot object to be serialized.
+     * @throws Exception If file could not be serialized/written to file.
+     */
     public static void saveSnapshotToFile(Path path, Snapshot snapshot) throws Exception {
         try (ObjectOutputStream objectStream = new ObjectOutputStream(Files.newOutputStream(path))) {
             objectStream.writeObject(snapshot);
@@ -79,6 +89,12 @@ public class Snapshot implements Serializable {
         }
     }
 
+    /**
+     * Read serialized Snapshot object from file and return it.
+     * @param path Path pointing to file.
+     * @return Snapshot object read from the file.
+     * @throws Exception If file could not be read properly.
+     */
     public static Snapshot loadSnapshotFromFile(Path path) throws Exception {
         try (ObjectInputStream objectStream = new ObjectInputStream(Files.newInputStream(path))){
             Snapshot snap = (Snapshot) objectStream.readObject();

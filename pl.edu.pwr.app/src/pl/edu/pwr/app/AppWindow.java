@@ -3,7 +3,6 @@ package pl.edu.pwr.app;
 import pl.edu.pwr.dir_hash.Snapshot;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,10 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.Vector;
 
 public class AppWindow extends JFrame implements ActionListener {
 
@@ -91,7 +86,6 @@ public class AppWindow extends JFrame implements ActionListener {
         add(mainPanel);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
        if (e.getSource() instanceof JComponent) {
@@ -112,7 +106,7 @@ public class AppWindow extends JFrame implements ActionListener {
     }
 
     /**
-     * Take snapshot of desired directory and save it to file.
+     * Handle user interactions in taking snapshot and saving it to file.
      */
     private void takeSnapshot() {
         String dirPath = null;
@@ -135,6 +129,9 @@ public class AppWindow extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Handle user interaction in importing snapshot from file.
+     */
     private void importSnapshot() {
         var fileChooser = new JFileChooser(FileSystems.getDefault().getPath(".").toFile());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -160,6 +157,9 @@ public class AppWindow extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Initialize snapshot comparison.
+     */
     private void compareSnapshots() {
         if (importedSnapshot == null){
             JOptionPane.showMessageDialog(this, "You didn't import directory snapshot yet, please do that first.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -172,6 +172,9 @@ public class AppWindow extends JFrame implements ActionListener {
         Snapshot.dirCmp(currentSnapshot, importedSnapshot).forEach(System.out::println);
     }
 
+    /**
+     * Open selected file in native file explorer.
+     */
     private void showFile() {
         if (pathList.getSelectedValue() == null){
             JOptionPane.showMessageDialog(this, "Please select a file first", "Error", JOptionPane.ERROR_MESSAGE);
