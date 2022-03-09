@@ -1,0 +1,2 @@
+JAVA_VERSION="11.0.14.10.1"
+MODULES="java.base java.datatransfer java.xml java.prefs java.desktop pl.edu.pwr.dir.hash pl.edu.pwr.app"

@@ -3,4 +3,5 @@ java -p "modulepath1;modulepath2" -m pl.edu.pwr.app/pl.edu.pwr.app.AppWindow
 jar -c -C pl.edu.pwr.app . >> app.jar
 jar -c -C pl.edu.pwr.dir.hash . >> lib.jar
 
+jdeps --module-path "C:\Users\ULTUX\IdeaProjects\lab1\out\production\pl.edu.pwr.app;C:\Users\ULTUX\IdeaProjects\lab1\out\production\pl.edu.pwr.dir.hash" --module pl.edu.pwr.app --list-deps
 jlink -p "C:\Users\ULTUX\IdeaProjects\lab1\out\production\pl.edu.pwr.app;C:\Users\ULTUX\IdeaProjects\lab1\out\production\pl.edu.pwr.dir.hash" --add-modules pl.edu.pwr.app,pl.edu.pwr.dir.hash,java.base,java.desktop --launcher start=pl.edu.pwr.app/pl.edu.pwr.app.AppWindow --output jlinkoutdirr
