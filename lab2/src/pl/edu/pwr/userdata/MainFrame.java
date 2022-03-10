@@ -1,8 +1,14 @@
 package pl.edu.pwr.userdata;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.ref.WeakReference;
+import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 
 public class MainFrame {
@@ -14,6 +20,8 @@ public class MainFrame {
     private JFormattedTextField ageField;
     private JLabel imgLabel;
     private JPanel mainPanel;
+    private JButton loadUserDataButton;
+    private JLabel isLoadedIndicator;
 
     ArrayList<WeakReference<UserData>> loadedUserData = new ArrayList<>();
 
@@ -31,5 +39,15 @@ public class MainFrame {
         ImageIcon newIcon = new ImageIcon(img.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         imgLabel.setIcon(newIcon);
         imgLabel.setText("");
+
+        loadUserDataButton.addActionListener(e -> {
+            JFileChooser fChooser = new JFileChooser();
+            fChooser.setAcceptAllFileFilterUsed(false);
+            fChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int retState = fChooser.showOpenDialog(mainPanel);
+            if (retState == JFileChooser.APPROVE_OPTION) {
+
+            }
+        });
     }
 }
