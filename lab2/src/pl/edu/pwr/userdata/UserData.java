@@ -1,18 +1,21 @@
 package pl.edu.pwr.userdata;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class UserData {
     private final String name;
     private final String lastName;
     private final int age;
-    private final BufferedImage profilePic;
+    private final ImageIcon profilePic;
 
-    public UserData(String name, String lastName, int age, BufferedImage profilePic) {
+    public UserData(String name, String lastName, int age, String imagePath) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
-        this.profilePic = profilePic;
+        ImageIcon icon = new ImageIcon(imagePath);
+        this.profilePic = new ImageIcon(icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
     }
 
     public String getName() {
@@ -27,7 +30,7 @@ public class UserData {
         return age;
     }
 
-    public BufferedImage getProfilePic() {
+    public ImageIcon getProfilePic() {
         return profilePic;
     }
 }
