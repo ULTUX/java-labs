@@ -27,7 +27,7 @@ public class DefaultDataProvider implements IDataProvider {
                 var userReader = new UserDataFileReader(new File(rootDir, userId));
                 var userData = userReader.getReadUser();
                 if (notificationComponent != null) notificationComponent.setSelected(true);
-                this.userData.put(userId, userData);
+                this.userData.put(new String(userId), userData);
                 return userData;
             } catch (IOException e) {
                 throw new IllegalArgumentException("User with given ID does not exist");
