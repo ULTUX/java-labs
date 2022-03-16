@@ -1,4 +1,4 @@
-package pl.edu.pwr.userdata;
+package pl.edu.pwr.userdata.datamodels;
 
 import javax.swing.*;
 import java.awt.*;
