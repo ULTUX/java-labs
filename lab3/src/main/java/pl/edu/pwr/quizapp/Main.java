@@ -1,3 +1,5 @@
+package pl.edu.pwr.quizapp;
+
 import com.jayway.jsonpath.JsonPath;
 
 import java.io.BufferedReader;
