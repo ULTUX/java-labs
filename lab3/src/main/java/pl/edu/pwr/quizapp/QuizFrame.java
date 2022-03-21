@@ -37,6 +37,11 @@ public class QuizFrame {
         languageSelector.addActionListener(actionEvent -> {
             languageChanged();
         });
+
+        languageManager.addLanguageChangeListener(() -> {
+            languageLabel.setText(languageManager.getLocalizedString(LocalizableStrings.LANGUAGE_CHANGE_LABEL));
+            frame.setTitle(languageManager.getLocalizedString(LocalizableStrings.WINDOW_TITLE));
+        });
     }
 
     public void languageChanged() {

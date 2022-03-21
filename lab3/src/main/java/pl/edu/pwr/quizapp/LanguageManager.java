@@ -24,6 +24,15 @@ public class LanguageManager {
         this.locale = locale;
         this.localeBundle = ResourceBundle.getBundle("LocaleBundle", locale);
         System.out.printf("Language changed to %s.", locale);
+        eventSubscribers.forEach(Runnable::run);
+    }
+
+    public void addLanguageChangeListener(Runnable runnable) {
+        eventSubscribers.add(runnable);
+    }
+
+    public void deleteLanguageChangeListener(Runnable runnable) {
+        eventSubscribers.remove(runnable);
     }
 
 }
