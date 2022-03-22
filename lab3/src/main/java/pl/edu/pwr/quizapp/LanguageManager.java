@@ -7,6 +7,9 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 public class LanguageManager {
+
+    private static LanguageManager instance;
+
     private Locale locale = new Locale("en", "US");
     private Preferences prefs = Preferences.userNodeForPackage(getClass());
     List<Runnable> eventSubscribers = new ArrayList<>();
@@ -33,6 +36,11 @@ public class LanguageManager {
 
     public void deleteLanguageChangeListener(Runnable runnable) {
         eventSubscribers.remove(runnable);
+    }
+
+    public LanguageManager getInstance() {
+        if (instance == null) instance = new LanguageManager();
+        return instance;
     }
 
 }

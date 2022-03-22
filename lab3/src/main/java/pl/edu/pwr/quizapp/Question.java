@@ -1,41 +1,33 @@
 package pl.edu.pwr.quizapp;
 
-import java.io.IOException;
+import java.util.function.Function;
 
 public class Question {
-    private final String question;
+    private final LocalizableStrings question;
     private String userAnswer;
-    private final String jsonAnswerPath;
-    private final String apiURL;
-    private final boolean isAnswerNumeric;
-    private double marginOfError = 0;
     private String realAnswer;
+    private final VerifyFunction<String, Boolean> analyzeQuestion;
+    private final LocalizableStrings questionAnswer;
 
-    public Question(String question, String userAnswer, String jsonAnswerPath, String apiURL, boolean isAnswerNumeric) {
+    public Question(LocalizableStrings question, LocalizableStrings answer, VerifyFunction<String, Boolean> analyzeQuestion) {
+        this.analyzeQuestion = analyzeQuestion;
         this.question = question;
-        this.userAnswer = userAnswer;
-        this.jsonAnswerPath = jsonAnswerPath;
-        this.apiURL = apiURL;
-        this.isAnswerNumeric = isAnswerNumeric;
+        this.questionAnswer = answer;
     }
 
-    public boolean verifyAnswer() throws IOException {
-        JSONDataParser parser = new JSONDataParser(apiURL, jsonAnswerPath);
-        String answer = parser.getValue();
-        realAnswer = answer;
-        if (isAnswerNumeric){
-            double numericAnswer = Double.parseDouble(answer);
-            if (Math.abs(numericAnswer - Double.parseDouble(userAnswer)) <= marginOfError) return true;
+    public boolean checkResults(){
+        try {
+            return analyzeQuestion.apply(userAnswer);
+        } catch (Exception e) {
+            return false;
         }
-        return userAnswer.strip().equals(answer.strip());
     }
-
 
     public String getRealAnswer() {
         return realAnswer;
     }
 
-    public String getQuestion() {
+    public LocalizableStrings getQuestion() {
         return question;
     }
 
@@ -47,20 +39,7 @@ public class Question {
         this.userAnswer = userAnswer;
     }
 
-    public String getJsonAnswerPath() {
-        return jsonAnswerPath;
+    public LocalizableStrings getQuestionAnswer() {
+        return questionAnswer;
     }
-
-    public boolean isAnswerNumeric() {
-        return isAnswerNumeric;
-    }
-
-    public double getMarginOfError() {
-        return marginOfError;
-    }
-
-    public void setMarginOfError(double marginOfError) {
-        this.marginOfError = marginOfError;
-    }
-
 }

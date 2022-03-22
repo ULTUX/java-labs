@@ -22,8 +22,8 @@ public class Main {
 
 
 
-        String string = JsonPath.parse(input.readLine()).read("$['_links']['continent:items'][0]['name']",String.class);
-        System.out.println(string);
+//        String string = JsonPath.parse(input.readLine()).read("$['_embedded']['city:search-results'][0]['_links']['city:item']['href']",String.class);
+//        System.out.println(string);
 
         ResourceBundle enMessages = ResourceBundle.getBundle("DefaultBundle", new Locale("en", "US"));
         System.out.println(enMessages.getString("greeting"));
