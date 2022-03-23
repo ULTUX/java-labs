@@ -6,7 +6,8 @@ public enum LocalizableStrings {
     ANSWER_SUBMIT_BUTTON("answerSubmitButton"),
     NEXT_QUESTION_BUTTON("nextQuestionButton"),
     Q_FIND_CITY_IN("qFindCityIn"),
-    A_FIND_CITY_IN("aFindCityIn"), Q_ALTERNATIVE_NAMES("qAlternativeNames"),
+    A_FIND_CITY_IN("aFindCityIn"),
+    Q_ALTERNATIVE_NAMES("qAlternativeNames"),
     A_ALTERNATIVE_NAMES("aAlternativeNames"),
     Q_CURRENCY("qCurrency"),
     A_CURRENCY("aCurrency");
