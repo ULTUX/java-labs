@@ -45,6 +45,7 @@ public class QuizFrame {
         mainFrame = new JFrame(languageManager.getLocalizedString(LocalizableStrings.WINDOW_TITLE));
         mainFrame.setContentPane(mainPanel);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setResizable(false);
         mainFrame.setSize(800, 120);
         mainFrame.setVisible(true);
 
