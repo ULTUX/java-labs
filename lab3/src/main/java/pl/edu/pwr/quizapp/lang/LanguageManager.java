@@ -1,4 +1,4 @@
-package pl.edu.pwr.quizapp;
+package pl.edu.pwr.quizapp.lang;
 
 import java.util.ArrayList;
 import java.util.List;

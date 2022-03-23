@@ -1,10 +1,12 @@
 package pl.edu.pwr.quizapp;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import pl.edu.pwr.quizapp.lang.LanguageManager;
+import pl.edu.pwr.quizapp.lang.LocalizableStrings;
+import pl.edu.pwr.quizapp.quiz.Question;
+import pl.edu.pwr.quizapp.quiz.Questions;
 
 import javax.swing.*;
-import javax.swing.plaf.multi.MultiLabelUI;
-import java.awt.*;
 import java.text.MessageFormat;
 import java.util.Locale;
 
@@ -12,16 +14,21 @@ public class QuizFrame {
 
     private final JFrame mainFrame;
     private JPanel mainPanel;
-    private JTextField sampleAnswerTextField;
+    private JTextField answerTextField1;
     private JButton submitQuestionButton;
     private JComboBox<String> languageSelector;
     private JLabel languageLabel;
     private JLabel confirmationLabel;
-    private JLabel questionLabel;
+    private JLabel fPartLabel;
+    private JTextField answerTextField2;
+    private JLabel sPartLabel;
+    private JButton nextQuestionButton;
     LanguageManager languageManager = new LanguageManager();
     Questions questions = new Questions();
     Question currentQuestion = null;
     String lastAnswer = null;
+    private boolean resultsShown = false;
+    private String userAnswer1, userAnswer2;
 
     public static void main(String[] args) {
         try {
@@ -52,10 +59,25 @@ public class QuizFrame {
             languageLabel.setText(languageManager.getLocalizedString(LocalizableStrings.LANGUAGE_CHANGE_LABEL));
             mainFrame.setTitle(languageManager.getLocalizedString(LocalizableStrings.WINDOW_TITLE));
             submitQuestionButton.setText(languageManager.getLocalizedString(LocalizableStrings.ANSWER_SUBMIT_BUTTON));
+            nextQuestionButton.setText(languageManager.getLocalizedString(LocalizableStrings.NEXT_QUESTION_BUTTON));
         });
 
+        languageManager.setLocale(new Locale("en_US"));
+
         submitQuestionButton.addActionListener((e) -> {
+            userAnswer1 = answerTextField1.getText();
+            answerTextField1.setText("");
+            userAnswer2 = answerTextField2.getText();
+            answerTextField2.setText("");
+            resultsShown = true;
             checkResults();
+        });
+
+        nextQuestionButton.addActionListener(e -> {
+            resultsShown = false;
+            confirmationLabel.setText("");
+            currentQuestion = questions.getRandomQuestion();
+            handleNextQuestion();
         });
 
         currentQuestion = questions.getRandomQuestion();
@@ -63,19 +85,19 @@ public class QuizFrame {
     }
 
     private void checkResults() {
-        String answer = sampleAnswerTextField.getText();
-        lastAnswer = answer;
-        sampleAnswerTextField.setText("");
-        currentQuestion.setUserAnswer(answer);
+        currentQuestion.setUserAnswer(new String[]{userAnswer1, userAnswer2});
         boolean results = currentQuestion.checkResults();
         MessageFormat answerFormat = new MessageFormat(languageManager.getLocalizedString(currentQuestion.getQuestionAnswer()));
-        Object answerArgs[] = {answer, results ? 1 : 0};
+        Object answerArgs[] = {userAnswer1, results ? 1 : 0, userAnswer2};
         confirmationLabel.setText(answerFormat.format(answerArgs));
+        resultsShown = true;
 
     }
 
     private void handleNextQuestion() {
-        questionLabel.setText(languageManager.getLocalizedString(currentQuestion.getQuestion()));
+        String[] questions = languageManager.getLocalizedString(currentQuestion.getQuestion()).split("\\|");
+        fPartLabel.setText(questions[0]);
+        sPartLabel.setText(questions[1]);
         mainFrame.pack();
 
     }
@@ -84,5 +106,6 @@ public class QuizFrame {
         String[] languageCode = ((String) languageSelector.getSelectedItem()).split("_");
         languageManager.setLocale(new Locale(languageCode[0], languageCode[1]));
         if (currentQuestion != null) handleNextQuestion();
+        if (resultsShown) checkResults();
     }
 }

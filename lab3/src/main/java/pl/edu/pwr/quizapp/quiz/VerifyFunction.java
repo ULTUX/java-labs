@@ -1,4 +1,4 @@
-package pl.edu.pwr.quizapp;
+package pl.edu.pwr.quizapp.quiz;
 
 
 @FunctionalInterface

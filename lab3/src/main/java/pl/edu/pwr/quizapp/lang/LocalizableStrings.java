@@ -1,14 +1,13 @@
-package pl.edu.pwr.quizapp;
+package pl.edu.pwr.quizapp.lang;
 
 public enum LocalizableStrings {
     WINDOW_TITLE("windowTitle"),
     LANGUAGE_CHANGE_LABEL("languageChangeLabel"),
     ANSWER_SUBMIT_BUTTON("answerSubmitButton"),
     CONFIRMATION_LABEL("confirmationLabel"),
-    Q_FIND_CITY_IN_PL("qFindCityInPL"),
-    A_FIND_CITY_IN_PL("aFindCityInPL"),
-    Q_FIND_CITY_IN_GB("qFindCityInGB"),
-    A_FIND_CITY_IN_GB("aFindCityInGB");
+    NEXT_QUESTION_BUTTON("nextQuestionButton"),
+    Q_FIND_CITY_IN("qFindCityIn"),
+    A_FIND_CITY_IN("aFindCityIn"), Q_ALTERNATIVE_NAMES("qAlternativeNames"), A_ALTERNATIVE_NAMES("aAlternativeNames");
 
     private String resourceName;
 
