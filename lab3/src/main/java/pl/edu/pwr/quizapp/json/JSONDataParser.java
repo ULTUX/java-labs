@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class JSONDataParser {
@@ -15,9 +16,9 @@ public class JSONDataParser {
     private final String dataPath;
     private String value = null;
 
-    public JSONDataParser(String apiURL, String jsonAnswerPath) {
+    public JSONDataParser(String apiURL, String jsonPath) {
         this.apiURL = apiURL;
-        this.dataPath = jsonAnswerPath;
+        this.dataPath = jsonPath;
     }
 
     public String getValue() throws IOException {
@@ -34,20 +35,23 @@ public class JSONDataParser {
         URL url = new URL(apiURL);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        System.out.println(url);
         if (con.getResponseCode() != 200) throw new IOException("Invalid URL provided");
         BufferedReader input = new BufferedReader(new InputStreamReader(con.getInputStream()));
         return input.readLine();
     }
 
 
-    public List<String> getDataList(String contextPath) throws IOException {
+    public List<String> getValueList(String contextPath) throws IOException {
         var context = JsonPath.parse(getResponse());
-        System.out.println(dataPath+"[*]['"+contextPath+"']");
-        return context.read(dataPath+"[*]['"+contextPath+"']");
+        return context.read(dataPath + "[*]['" + contextPath + "']");
     }
 
-    public static String urlEncode(String value){
+    public List<LinkedHashMap<String, String>> getMapList() throws IOException {
+        var context = JsonPath.parse(getResponse());
+        return context.read(dataPath + "[*]");
+    }
+
+    public static String urlEncode(String value) {
         try {
             return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {

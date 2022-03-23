@@ -23,10 +23,9 @@ public class QuizFrame {
     private JTextField answerTextField2;
     private JLabel sPartLabel;
     private JButton nextQuestionButton;
-    LanguageManager languageManager = new LanguageManager();
-    Questions questions = new Questions();
-    Question currentQuestion = null;
-    String lastAnswer = null;
+    private final LanguageManager languageManager = LanguageManager.getInstance();
+    private final Questions questions;
+    private Question currentQuestion = null;
     private boolean resultsShown = false;
     private String userAnswer1;
     private String userAnswer2;
@@ -41,26 +40,26 @@ public class QuizFrame {
     }
 
     public QuizFrame() {
+        this.questions = new Questions();
+
         mainFrame = new JFrame(languageManager.getLocalizedString(LocalizableStrings.WINDOW_TITLE));
         mainFrame.setContentPane(mainPanel);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setSize(800, 120);
         mainFrame.setVisible(true);
 
-        languageLabel.setText(languageManager.getLocalizedString(LocalizableStrings.LANGUAGE_CHANGE_LABEL));
         languageSelector.setModel(new DefaultComboBoxModel<>(new String[]{"en_US", "pl_PL"}));
-        languageChanged();
-
         languageSelector.addActionListener(actionEvent -> languageChanged());
+        languageSelector.setSelectedItem(languageManager.getLocale().toString());
 
         languageManager.addLanguageChangeListener(() -> {
             languageLabel.setText(languageManager.getLocalizedString(LocalizableStrings.LANGUAGE_CHANGE_LABEL));
             mainFrame.setTitle(languageManager.getLocalizedString(LocalizableStrings.WINDOW_TITLE));
             submitQuestionButton.setText(languageManager.getLocalizedString(LocalizableStrings.ANSWER_SUBMIT_BUTTON));
             nextQuestionButton.setText(languageManager.getLocalizedString(LocalizableStrings.NEXT_QUESTION_BUTTON));
+            if (currentQuestion != null) handleNextQuestion();
+            if (resultsShown) checkResults();
         });
-
-        languageManager.setLocale(new Locale("en_US"));
 
         submitQuestionButton.addActionListener(e -> {
             userAnswer1 = answerTextField1.getText();
@@ -74,12 +73,12 @@ public class QuizFrame {
         nextQuestionButton.addActionListener(e -> {
             resultsShown = false;
             confirmationLabel.setText("");
-            currentQuestion = questions.getRandomQuestion();
+            currentQuestion = questions.getRandomQuestion(currentQuestion);
             handleNextQuestion();
         });
 
 
-        currentQuestion = questions.getRandomQuestion();
+        currentQuestion = questions.getRandomQuestion(currentQuestion);
         handleNextQuestion();
     }
 
@@ -94,7 +93,7 @@ public class QuizFrame {
     }
 
     private void handleNextQuestion() {
-        String[] questionStrings = languageManager.getLocalizedString(currentQuestion.getQuestion()).split("\\|");
+        String[] questionStrings = languageManager.getLocalizedString(currentQuestion.getQuestionText()).split("\\|");
         fPartLabel.setText(questionStrings[0]);
         sPartLabel.setText(questionStrings[1]);
 
@@ -103,7 +102,5 @@ public class QuizFrame {
     public void languageChanged() {
         String[] languageCode = ((String) languageSelector.getSelectedItem()).split("_");
         languageManager.setLocale(new Locale(languageCode[0], languageCode[1]));
-        if (currentQuestion != null) handleNextQuestion();
-        if (resultsShown) checkResults();
     }
 }
