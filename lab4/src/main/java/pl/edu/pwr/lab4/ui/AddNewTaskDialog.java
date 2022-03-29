@@ -62,7 +62,7 @@ public class AddNewTaskDialog extends JDialog {
 
     private void onOK() {
         if (taskInput.getText().trim().equals("") || taskList.getSelectedIndex() == -1) {
-            uiUtils.showErrorMessage("You did not select any task.");
+            uiUtils.showErrorMessage("You did not select any task/input is empty.");
             return;
         }
         approved = true;

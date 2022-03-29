@@ -3,14 +3,14 @@ package pl.edu.pwr.lab4.ui;
 import pl.edu.pwr.lab4.ProcessClassLoader;
 import pl.edu.pwr.lab4.processing.CustomStatusListener;
 import pl.edu.pwr.lab4.processing.Processor;
-import pl.edu.pwr.lab4.processors.MyProcessor;
+import pl.edu.pwr.lab4.processing.Status;
+import pl.edu.pwr.lab4.processing.TaskIdDistributor;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.FileSystems;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainFrame {
@@ -24,7 +24,6 @@ public class MainFrame {
     private JFrame mainFrame;
     private String selectedTask;
     private List<Processor> processors;
-    private List<Processor> runningProcessors;
 
     private CustomStatusListener statusListener = new CustomStatusListener();
 
@@ -41,21 +40,27 @@ public class MainFrame {
         mainFrame.setVisible(true);
         mainFrame.pack();
 
-        statusListener.addEventHandler(() -> reloadWindow());
+        statusListener.addEventHandler(this::stateUpdated);
 
         reloadProcessorClassesButton.addActionListener(e -> handleReloadClasses());
         addNewTaskButton.addActionListener(e -> handleAddNewTask());
 
     }
 
-    private void reloadWindow() {
+    private void stateUpdated(Status s) {
+        System.out.println("UI RELOAD REQUESTED");
+        if (s.getProgress() == 100) {
+            try {
+                Thread.sleep(100);
+                JOptionPane.showMessageDialog(mainFrame, "Progress finished\nResult"+ TaskIdDistributor.getInstance().getProcessorWithId(s.getTaskId()).getResult(), "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         //TODO: Status of one of the processors changed, reload the window with new data.
     }
 
     private void handleAddNewTask() {
-        //TODO: DELETE IT (DEBUG ONLY)
-        processors = new ArrayList<>();
-        processors.add(new MyProcessor());
         if (processors == null || processors.isEmpty()) {
             uiUtils.showErrorMessage("Please first add some processors (processor list is empty)");
             return;
@@ -63,11 +68,9 @@ public class MainFrame {
         AddNewTaskDialog dialog = new AddNewTaskDialog(processors);
         dialog.setVisible(true);
         if (dialog.isApproved()){
-            //TODO: HANDLE TASK ADDED EVENT
             try {
                 Processor toRun = dialog.getSelectedProcessor().getClass().getConstructor().newInstance();
                 toRun.submitTask(dialog.getProcessorInput(), statusListener);
-                runningProcessors.add(toRun);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 uiUtils.showErrorMessage("Something impossible just happened (this probably means app bug).");
             }

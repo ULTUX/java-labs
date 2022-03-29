@@ -3,25 +3,27 @@ package pl.edu.pwr.lab4.processing;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CustomStatusListener implements StatusListener{
-    private HashMap<Processor, Status> statusMap;
-    private List<Runnable> eventHandlers = new ArrayList<>();
+    private HashMap<Processor, Status> statusMap = new HashMap<>();
+    private List<Consumer<Status>> eventHandlers = new ArrayList<>();
 
 
-    public void addEventHandler(Runnable r){
+    public void addEventHandler(Consumer<Status> r){
         eventHandlers.add(r);
     }
 
-    public void removeEventHandler(Runnable r){
+    public void removeEventHandler(Consumer<Status> r){
         eventHandlers.remove(r);
     }
 
 
     @Override
     public void statusChanged(Status s) {
+        TaskIdDistributor distributor = TaskIdDistributor.getInstance();
         Processor processor = TaskIdDistributor.getInstance().getProcessorWithId(s.getTaskId());
         statusMap.put(processor, s);
-        eventHandlers.forEach(Runnable::run);
+        eventHandlers.forEach(statusConsumer -> statusConsumer.accept(s));
     }
 }
