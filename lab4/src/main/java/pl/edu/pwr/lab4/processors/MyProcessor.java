@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import pl.edu.pwr.lab4.processing.Processor;
 import pl.edu.pwr.lab4.processing.Status;
 import pl.edu.pwr.lab4.processing.StatusListener;
+import pl.edu.pwr.lab4.processing.TaskIdDistributor;
 
 /**
  * Klasa procesora symuluj?ca d?ugotrwa?e przetwarzanie
@@ -19,12 +20,15 @@ import pl.edu.pwr.lab4.processing.StatusListener;
 		
 public class MyProcessor implements Processor {
 	
-	private static int taskId=0;
 	private String result = null;
+	private int taskId;
+
+	public MyProcessor() {
+		taskId = TaskIdDistributor.getInstance().registerNewProcessor(this);
+	}
 
 	@Override
 	public boolean submitTask(String task, StatusListener sl) {
-		taskId++;
 		AtomicInteger ai = new AtomicInteger(0);
 		 	
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();

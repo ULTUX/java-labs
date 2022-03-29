@@ -3,6 +3,7 @@ package pl.edu.pwr.lab4.processors;
 import pl.edu.pwr.lab4.processing.Processor;
 import pl.edu.pwr.lab4.processing.Status;
 import pl.edu.pwr.lab4.processing.StatusListener;
+import pl.edu.pwr.lab4.processing.TaskIdDistributor;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,8 +12,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SumProcessor implements Processor {
 
-    private static int taskId;
     private String result;
+    private int taskId;
+
+    public SumProcessor() {
+        taskId = TaskIdDistributor.getInstance().registerNewProcessor(this);
+    }
 
     @Override
     public boolean submitTask(String task, StatusListener sl) {
