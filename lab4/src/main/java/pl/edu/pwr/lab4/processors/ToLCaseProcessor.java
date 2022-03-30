@@ -5,15 +5,19 @@ import pl.edu.pwr.lab4.processing.Status;
 import pl.edu.pwr.lab4.processing.StatusListener;
 import pl.edu.pwr.lab4.processing.TaskIdDistributor;
 
-import java.util.concurrent.*;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SumProcessor implements Processor {
+public class ToLCaseProcessor implements Processor {
 
     private String result;
     private final int taskId;
 
-    public SumProcessor() {
+    public ToLCaseProcessor() {
         taskId = TaskIdDistributor.getInstance().registerNewProcessor(this);
     }
 
@@ -37,10 +41,9 @@ public class SumProcessor implements Processor {
                 }
                 catch (InterruptedException ignored){}
                 if (timer.get() >= 100){
-                    String[] numbers = task.split("\\+");
+                    result = task.toLowerCase(Locale.ROOT);
                     timerS.shutdown();
                     taskS.shutdown();
-                    result = String.valueOf(Integer.parseInt(numbers[0].trim()) + Integer.parseInt(numbers[1].trim()));
                     break;
 
                 }
@@ -51,7 +54,7 @@ public class SumProcessor implements Processor {
 
     @Override
     public String getInfo() {
-        return "Sum two numbers passed in form \"x + y\".";
+        return "Convert string to lower case";
     }
 
     @Override

@@ -4,8 +4,6 @@ import pl.edu.pwr.lab4.processing.Processor;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -46,21 +44,18 @@ public class DirClassLoader extends ClassLoader{
         }
     }
 
-    public List<Processor> loadProcessorsFromFile() throws IOException {
-        List<Processor> processors = new ArrayList<>();
+    public List<Class<Processor>> loadProcessorsFromFile() throws IOException {
+        List<Class<Processor>> processors = new ArrayList<>();
         try (
                 Stream<Path> stream = Files.walk(classesPath, 1)) {
             stream.forEach(path -> {
                 if (!path.toFile().isDirectory()) {
                     try {
                         Class<?> objectClass = loadClass(path.getFileName().toString());
-                        for (Method method : objectClass.getMethods()) {
-                            System.out.println(method.getName());
-                        }
                         if (Processor.class.isAssignableFrom(objectClass)) {
-                            processors.add((Processor) objectClass.getConstructor().newInstance());
+                            processors.add((Class<Processor>) objectClass);
                         }
-                    } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                    } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }

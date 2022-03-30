@@ -18,7 +18,13 @@ public class TaskIdDistributor {
         return currentId++;
     }
 
+    public void clearRunningProcessors() {
+        runningProcessors.clear();
+        runningProcessors = new HashMap<>();
+    }
+
     public int getId(Processor processor) {
+        if (processor == null) return -1;
         AtomicInteger id = new AtomicInteger(-1);
         runningProcessors.forEach((integer, processor1) -> {
             if (processor.equals(processor1)) id.set(integer);

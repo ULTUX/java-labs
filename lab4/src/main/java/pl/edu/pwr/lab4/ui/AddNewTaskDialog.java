@@ -4,6 +4,7 @@ import pl.edu.pwr.lab4.processing.Processor;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +22,20 @@ public class AddNewTaskDialog extends JDialog {
 
     UIUtils uiUtils = new UIUtils(this);
 
-    public AddNewTaskDialog(List<Processor> processors) {
+    public AddNewTaskDialog(List<Class<Processor>> processors) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        pack();
         if (processors == null || processors.isEmpty()) return;
-        List<AddNewTaskDialog.ProcessorListEntity> processorsListE = processors.stream().map(AddNewTaskDialog.ProcessorListEntity::new).collect(Collectors.toList());
+        List<AddNewTaskDialog.ProcessorListEntity> processorsListE = processors.stream().map(classP -> {
+            try {
+                Processor processor = classP.getConstructor().newInstance();
+                return new ProcessorListEntity(processor);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toList());
         model = new DefaultListModel<>();
         processorsListE.forEach(model::addElement);
         taskList.setModel(model);

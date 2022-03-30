@@ -5,16 +5,26 @@ import pl.edu.pwr.lab4.processing.Status;
 import pl.edu.pwr.lab4.processing.StatusListener;
 import pl.edu.pwr.lab4.processing.TaskIdDistributor;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SumProcessor implements Processor {
+public class FactorialProcessor implements Processor {
 
     private String result;
     private final int taskId;
 
-    public SumProcessor() {
+    public FactorialProcessor() {
         taskId = TaskIdDistributor.getInstance().registerNewProcessor(this);
+    }
+
+    private int factorial(int n){
+        if (n <= 2) {
+            return n;
+        }
+        return n* factorial(n-1);
     }
 
     @Override
@@ -37,10 +47,9 @@ public class SumProcessor implements Processor {
                 }
                 catch (InterruptedException ignored){}
                 if (timer.get() >= 100){
-                    String[] numbers = task.split("\\+");
                     timerS.shutdown();
                     taskS.shutdown();
-                    result = String.valueOf(Integer.parseInt(numbers[0].trim()) + Integer.parseInt(numbers[1].trim()));
+                    result = String.valueOf(factorial(Integer.parseInt(task.trim())));
                     break;
 
                 }
@@ -51,12 +60,11 @@ public class SumProcessor implements Processor {
 
     @Override
     public String getInfo() {
-        return "Sum two numbers passed in form \"x + y\".";
+        return "Get factorial of number.";
     }
 
     @Override
     public String getResult() {
-        if (result == null) return null;
-        return new String(result);
+        return result;
     }
 }

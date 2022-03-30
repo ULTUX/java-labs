@@ -18,11 +18,15 @@ public class CustomStatusListener implements StatusListener{
         eventHandlers.remove(r);
     }
 
+    public void clearStatusMap() {
+        statusMap.clear();
+    }
+
 
     @Override
     public void statusChanged(Status s) {
         TaskIdDistributor distributor = TaskIdDistributor.getInstance();
-        Processor processor = TaskIdDistributor.getInstance().getProcessorWithId(s.getTaskId());
+        Processor processor = distributor.getProcessorWithId(s.getTaskId());
         statusMap.put(processor, s);
         eventHandlers.forEach(statusConsumer -> statusConsumer.accept(s));
     }

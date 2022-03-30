@@ -1,61 +1,96 @@
 package pl.edu.pwr.lab4.ui;
 
-import pl.edu.pwr.lab4.ProcessClassLoader;
-import pl.edu.pwr.lab4.processing.CustomStatusListener;
-import pl.edu.pwr.lab4.processing.Processor;
-import pl.edu.pwr.lab4.processing.Status;
-import pl.edu.pwr.lab4.processing.TaskIdDistributor;
+import pl.edu.pwr.lab4.DirClassLoader;
+import pl.edu.pwr.lab4.processing.*;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.FileSystems;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainFrame {
-    private JTextPane taskNotifications;
     private JLabel taskIdLabel;
     private JLabel taskStateLabel;
     private JLabel taskResultLabel;
     private JButton addNewTaskButton;
     private JButton reloadProcessorClassesButton;
-    private JPanel mainPanel;
+    public JPanel mainPanel;
+    private JList<Processor> currentProcessorList;
+    private JButton unloadClassesButton;
+    private final DefaultListModel<Processor> processorListModel = new DefaultListModel<>();
     private JFrame mainFrame;
     private String selectedTask;
-    private List<Processor> processors;
-
+    private List<Class<Processor>> processors;
     private CustomStatusListener statusListener = new CustomStatusListener();
+    private HashMap<Integer, String> status = new HashMap<>();
+    DirClassLoader loader;
 
     UIUtils uiUtils = new UIUtils(mainFrame);
 
     public static void main(String[] args) {
-        new MainFrame();
-    }
-
-    public MainFrame() {
-        mainFrame = new JFrame("Simple task manager");
-        mainFrame.setContentPane(mainPanel);
+        JFrame mainFrame = new JFrame("Simple task manager");
+        mainFrame.setContentPane(new MainFrame().mainPanel);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
         mainFrame.pack();
+
+    }
+
+    public MainFrame() {
 
         statusListener.addEventHandler(this::stateUpdated);
 
         reloadProcessorClassesButton.addActionListener(e -> handleReloadClasses());
         addNewTaskButton.addActionListener(e -> handleAddNewTask());
 
+        currentProcessorList.setModel(processorListModel);
+        currentProcessorList.addListSelectionListener(e -> handleListSelectionChanged());
+
+        unloadClassesButton.addActionListener(e -> {
+            processors.clear();
+            processorListModel.clear();
+            TaskIdDistributor.getInstance().clearRunningProcessors();
+            statusListener.clearStatusMap();
+            loader = null;
+            System.gc();
+            uiUtils.showSuccessMessage("Removed all references to all processors and performed gc run.");
+        });
+
+    }
+
+    private void updateSelectedProcessor() {
+        Processor selectedProcessor = currentProcessorList.getSelectedValue();
+        if (selectedProcessor == null) return;
+        int id = TaskIdDistributor.getInstance().getId(selectedProcessor);
+        taskIdLabel.setText(String.valueOf(id));
+        taskStateLabel.setText(status.get(id));
+        if (selectedProcessor.getResult() != null) taskResultLabel.setText(selectedProcessor.getResult());
+        else taskResultLabel.setText("no data");
+    }
+
+    private void handleListSelectionChanged() {
+        updateSelectedProcessor();
     }
 
     private void stateUpdated(Status s) {
-        System.out.println("UI RELOAD REQUESTED");
+        Processor processor = TaskIdDistributor.getInstance().getProcessorWithId(s.getTaskId());
+        status.put(s.getTaskId(), String.valueOf(s.getProgress()));
+        updateSelectedProcessor();
         if (s.getProgress() == 100) {
-            try {
-                Thread.sleep(100);
-                JOptionPane.showMessageDialog(mainFrame, "Progress finished\nResult"+ TaskIdDistributor.getInstance().getProcessorWithId(s.getTaskId()).getResult(), "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            new Thread(() -> {
+                while (processor.getResult() == null){
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                updateSelectedProcessor();
+            }).start();
         }
         //TODO: Status of one of the processors changed, reload the window with new data.
     }
@@ -66,11 +101,13 @@ public class MainFrame {
             return;
         }
         AddNewTaskDialog dialog = new AddNewTaskDialog(processors);
+        dialog.pack();
         dialog.setVisible(true);
         if (dialog.isApproved()){
             try {
                 Processor toRun = dialog.getSelectedProcessor().getClass().getConstructor().newInstance();
                 toRun.submitTask(dialog.getProcessorInput(), statusListener);
+                processorListModel.addElement(toRun);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 uiUtils.showErrorMessage("Something impossible just happened (this probably means app bug).");
             }
@@ -85,9 +122,9 @@ public class MainFrame {
         int result = fileChooser.showOpenDialog(mainFrame);
         if (result != JFileChooser.APPROVE_OPTION) return;
         File dir = fileChooser.getSelectedFile();
-        ProcessClassLoader loader = new ProcessClassLoader(dir.toPath(), "pl.edu.pwr.lab4.processors");
+        loader = new DirClassLoader("pl.edu.pwr.lab4.processors", dir.toPath());
         try {
-            processors = loader.getClasses();
+            processors = new ArrayList<>(loader.loadProcessorsFromFile());
             uiUtils.showSuccessMessage("Successfully imported "+processors.size()+" classes");
 
         } catch (IOException ex) {
