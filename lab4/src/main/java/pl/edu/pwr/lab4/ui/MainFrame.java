@@ -21,6 +21,7 @@ public class MainFrame {
     public JPanel mainPanel;
     private JList<Processor> currentProcessorList;
     private JButton unloadClassesButton;
+    private JLabel processorInfoLabel;
     private final DefaultListModel<Processor> processorListModel = new DefaultListModel<>();
     private JFrame mainFrame;
     private String selectedTask;
@@ -68,6 +69,7 @@ public class MainFrame {
         int id = TaskIdDistributor.getInstance().getId(selectedProcessor);
         taskIdLabel.setText(String.valueOf(id));
         taskStateLabel.setText(status.get(id));
+        processorInfoLabel.setText(selectedProcessor.getInfo());
         if (selectedProcessor.getResult() != null) taskResultLabel.setText(selectedProcessor.getResult());
         else taskResultLabel.setText("no data");
     }
