@@ -23,8 +23,7 @@ public class MainFrame {
     private JButton unloadClassesButton;
     private JLabel processorInfoLabel;
     private final DefaultListModel<Processor> processorListModel = new DefaultListModel<>();
-    private JFrame mainFrame;
-    private String selectedTask;
+    private static JFrame mainFrame;
     private List<Class<Processor>> processors;
     private CustomStatusListener statusListener = new CustomStatusListener();
     private HashMap<Integer, String> status = new HashMap<>();
@@ -33,7 +32,7 @@ public class MainFrame {
     UIUtils uiUtils = new UIUtils(mainFrame);
 
     public static void main(String[] args) {
-        JFrame mainFrame = new JFrame("Simple task manager");
+        mainFrame = new JFrame("Simple task manager");
         mainFrame.setContentPane(new MainFrame().mainPanel);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
@@ -94,7 +93,6 @@ public class MainFrame {
                 updateSelectedProcessor();
             }).start();
         }
-        //TODO: Status of one of the processors changed, reload the window with new data.
     }
 
     private void handleAddNewTask() {
