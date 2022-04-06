@@ -3,7 +3,6 @@ package pl.edu.pwr.lab4;
 import pl.edu.pwr.lab4.processing.Processor;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
