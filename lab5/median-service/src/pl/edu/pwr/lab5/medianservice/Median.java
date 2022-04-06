@@ -22,10 +22,10 @@ public class Median implements AnalysisService {
         result = new DataSet();
         String[] resultData = new String[ds.getHeader().length];
         String[][] calcData = ds.getData();
-        for (int i = 0; i < calcData.length; i++) {
-            int[] colData = new int[calcData[i].length];
-            for (int j = 0; j < calcData[i].length; j++) {
-                colData[j] = Integer.parseInt(calcData[i][j]);
+        for (int i = 0; i < calcData[0].length; i++) {
+            int[] colData = new int[calcData.length];
+            for (int j = 0; j < calcData.length; j++) {
+                colData[j] = Integer.parseInt(calcData[j][i]);
             }
             Arrays.sort(colData);
             int median = 0;

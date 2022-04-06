@@ -1,6 +1,9 @@
 package pl.edu.pwr.lab5.client.ui;
 
+import pl.edu.pwr.lab5.api.AnalysisException;
 import pl.edu.pwr.lab5.api.AnalysisService;
+import pl.edu.pwr.lab5.api.DataSet;
+import pl.edu.pwr.lab5.client.ServiceRunner;
 import pl.edu.pwr.lab5.client.io.CsvFileReader;
 
 import javax.swing.*;
@@ -9,15 +12,18 @@ import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 
 public class MainFrame extends JFrame {
     private JButton loadDataButton;
     private JComboBox<AnalysisServiceItem> analysisSelector;
-    private DefaultComboBoxModel<AnalysisServiceItem> analysisSelectorModel;
+    private final DefaultComboBoxModel<AnalysisServiceItem> analysisSelectorModel;
     private JTable inputTable;
     private JPanel mainPanel;
     private JButton startCalculationsButton;
-    ServiceLoader<AnalysisService> analysisServices;
+    private final transient ServiceLoader<AnalysisService> analysisServices;
+    private transient CsvFileReader readFile;
+    private ServiceRunner runner = new ServiceRunner();
 
     public MainFrame() {
         super("Statistic analysis tool");
@@ -31,6 +37,32 @@ public class MainFrame extends JFrame {
         analysisSelector.setModel(analysisSelectorModel);
         analysisServices.forEach(analysisService -> analysisSelectorModel.addElement(new AnalysisServiceItem(analysisService)));
         loadDataButton.addActionListener(e -> handleLoadData());
+        startCalculationsButton.addActionListener(e -> handleStartCalc());
+        runner.addListener(calculationListener);
+    }
+
+    private final Consumer<Object> calculationListener = o -> {
+        if (o instanceof Exception){
+            showErrorMessage("Could not compute, error: "+((Exception) o).getMessage());
+            return;
+        }
+        System.out.println("Received data");
+        var dataSet = (DataSet) o;
+        for (int i = 0; i < dataSet.getData()[0].length; i++) {
+            System.out.println(dataSet.getData()[0][i]);
+        }
+    };
+
+    private void handleStartCalc() {
+        if (readFile == null) return;
+        AnalysisService service = ((AnalysisServiceItem) analysisSelector.getSelectedItem()).service;
+        var dataSet = new DataSet();
+        dataSet.setData(readFile.getData());
+        dataSet.setHeader(readFile.getHeaders());
+        runner.setService(service);
+        runner.setInputData(dataSet);
+        runner.startCalc();
+
     }
 
     private void handleLoadData() {
@@ -48,6 +80,8 @@ public class MainFrame extends JFrame {
                 fileReader.readFile();
                 var tableModel = new DefaultTableModel(fileReader.getData(), fileReader.getHeaders());
                 inputTable.setModel(tableModel);
+                readFile = fileReader;
+                startCalculationsButton.setEnabled(true);
             } catch (FileNotFoundException e) {
                 showErrorMessage("Could not open selected file.");
             }

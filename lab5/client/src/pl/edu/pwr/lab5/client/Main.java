@@ -3,7 +3,6 @@ package pl.edu.pwr.lab5.client;
 import pl.edu.pwr.lab5.api.AnalysisService;
 import pl.edu.pwr.lab5.client.ui.MainFrame;
 
-import javax.swing.*;
 import java.util.ServiceLoader;
 
 public class Main {
