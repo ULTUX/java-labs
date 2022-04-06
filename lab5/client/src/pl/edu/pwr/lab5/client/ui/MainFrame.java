@@ -1,6 +1,5 @@
 package pl.edu.pwr.lab5.client.ui;
 
-import pl.edu.pwr.lab5.api.AnalysisException;
 import pl.edu.pwr.lab5.api.AnalysisService;
 import pl.edu.pwr.lab5.api.DataSet;
 import pl.edu.pwr.lab5.client.ServiceRunner;
@@ -48,6 +47,9 @@ public class MainFrame extends JFrame {
         }
         System.out.println("Received data");
         var dataSet = (DataSet) o;
+        ResultDialog dialog = new ResultDialog(dataSet);
+        dialog.pack();
+        dialog.setVisible(true);
         for (int i = 0; i < dataSet.getData()[0].length; i++) {
             System.out.println(dataSet.getData()[0][i]);
         }

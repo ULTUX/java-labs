@@ -37,6 +37,7 @@ public class Median implements AnalysisService {
 
 
         result.setData(new String[][]{resultData});
+        result.setHeader(ds.getHeader());
     }
 
     @Override
