@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,7 +25,7 @@ public class CsvFileReader {
             List<String[]> fileData = new ArrayList<>();
             while (scanner.hasNextLine()){
                 String row = scanner.nextLine();
-                fileData.add(row.split(","));
+                fileData.add(Arrays.stream(row.split(",")).map(String::trim).toArray(String[]::new));
             }
             String[][] dataArray = fileData.toArray(new String[][]{});
             this.headers = fileHeaders;

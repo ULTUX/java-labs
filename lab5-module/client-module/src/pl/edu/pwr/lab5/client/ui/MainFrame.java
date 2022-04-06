@@ -45,14 +45,10 @@ public class MainFrame extends JFrame {
             showErrorMessage("Could not compute, error: "+((Exception) o).getMessage());
             return;
         }
-        System.out.println("Received data");
         var dataSet = (DataSet) o;
         ResultDialog dialog = new ResultDialog(dataSet);
         dialog.pack();
         dialog.setVisible(true);
-        for (int i = 0; i < dataSet.getData()[0].length; i++) {
-            System.out.println(dataSet.getData()[0][i]);
-        }
     };
 
     private void handleStartCalc() {
