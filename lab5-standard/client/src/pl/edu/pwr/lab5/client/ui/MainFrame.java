@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.prefs.Preferences;
 
 public class MainFrame extends JFrame {
     private JButton loadDataButton;
