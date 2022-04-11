@@ -16,6 +16,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     private JButton startButton;
     private JButton stopButton;
     private JSpinner capacitySpinner;
+    private JTextField billboardName;
     private Map<Integer, Order> ads = new HashMap<>();
     Duration displayInterval = Duration.ofSeconds(2);
 
@@ -54,5 +55,10 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     @Override
     public boolean stop() throws RemoteException {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return billboardName.getText();
     }
 }

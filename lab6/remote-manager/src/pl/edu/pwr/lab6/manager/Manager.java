@@ -10,31 +10,36 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Manager extends UnicastRemoteObject implements IManager {
 
     private JPanel panel1;
-    private JList list1;
-    List<IBillboard> billboardList = new ArrayList<>();
+    private JList<IBillboard> list1;
+    private DefaultListModel<IBillboard> listModel = new DefaultListModel<>();
+    Map<Integer, IBillboard> billboardList = new HashMap();
 
     protected Manager() throws RemoteException, MalformedURLException {
         LocateRegistry.createRegistry(1099);
         Naming.rebind("//localhost:1099/manager", this);
-
+        list1.setModel(listModel);
     }
 
     @Override
     public int bindBillboard(IBillboard billboard) throws RemoteException {
-        billboardList.add(billboard);
-        return billboardList.indexOf(billboard);
+        int id = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+        billboardList.put(id, billboard);
+        listModel.addElement(billboard);
+        return id;
     }
 
     @Override
     public boolean unbindBillboard(int billboardId) throws RemoteException {
         try {
             billboardList.remove(billboardId);
+            listModel.removeElement(billboardList.get(billboardId));
             return true;
         }
         catch (IndexOutOfBoundsException e){
@@ -44,13 +49,29 @@ public class Manager extends UnicastRemoteObject implements IManager {
 
     @Override
     public boolean placeOrder(Order order) throws RemoteException {
-        System.out.println("GOT ORDER"+ order.toString());
-        order.client.setOrderId(45);
-        return false;
+        var wasAdded = new AtomicBoolean(false);
+        billboardList.forEach((id, iBillboard) -> {
+            try {
+                if (iBillboard.getCapacity()[1] > 0){
+                    iBillboard.addAdvertisement(order.advertText, order.displayPeriod, id);
+                    wasAdded.set(true);
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+        return wasAdded.get();
     }
 
     @Override
     public boolean withdrawOrder(int orderId) throws RemoteException {
+        billboardList.forEach((integer, iBillboard) -> {
+            try {
+                iBillboard.removeAdvertisement(orderId);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
         return false;
     }
 

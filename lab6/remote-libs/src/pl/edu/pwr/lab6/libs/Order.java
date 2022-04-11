@@ -30,4 +30,9 @@ public class Order implements Serializable {
         this.advertText = advertText;
         this.displayPeriod = displayPeriod;
     }
+
+    @Override
+    public String toString() {
+        return advertText;
+    }
 }
