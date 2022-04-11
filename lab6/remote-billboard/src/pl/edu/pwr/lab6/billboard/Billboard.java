@@ -104,7 +104,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
             System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
             System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
             System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
-            Registry reg = LocateRegistry.getRegistry("localhost", 1099, new SslRMIClientSocketFactory());
+            Registry reg = LocateRegistry.getRegistry(hostField.getText(), Integer.parseInt(portField.getText()), new SslRMIClientSocketFactory());
             manager = (IManager) reg.lookup("manager");
             manager.bindBillboard(this);
         } catch (NotBoundException | RemoteException e) {
