@@ -3,6 +3,7 @@ package pl.edu.pwr.lab6.client;
 import pl.edu.pwr.lab6.libs.IClient;
 import pl.edu.pwr.lab6.libs.IManager;
 import pl.edu.pwr.lab6.libs.Order;
+import pl.edu.pwr.lab6.libs.UIUtils;
 
 import javax.swing.*;
 import java.net.MalformedURLException;
@@ -27,9 +28,11 @@ public class Client extends UnicastRemoteObject implements IClient {
     private JButton connectButton;
     private JPanel mainPanel;
     private transient IManager manager;
-    Order awaitingOrder;
+    private final UIUtils uiUtils;
+    private Order awaitingOrder;
 
     protected Client() throws RemoteException, MalformedURLException, NotBoundException {
+        uiUtils = new UIUtils(mainPanel);
         connectButton.addActionListener(e -> connectClicked());
 
         orderList.setModel(listModel);
@@ -47,7 +50,7 @@ public class Client extends UnicastRemoteObject implements IClient {
             manager.withdrawOrder(entry.getKey());
             orderMap.remove(entry.getKey());
             listModel.removeElement(entry.getValue());
-            showSuccessMessage("Successfully cancelled order.");
+            uiUtils.showSuccessMessage("Successfully cancelled order.");
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -61,15 +64,16 @@ public class Client extends UnicastRemoteObject implements IClient {
             manager.placeOrder(order);
             awaitingOrder = order;
         } catch (RemoteException e) {
-            showErrorMessage("Could not place an order.");
+            uiUtils.showErrorMessage("Could not place an order.");
         }
     }
 
     private void connectClicked() {
         try {
             manager = (IManager) Naming.lookup("rmi://"+hostField.getText()+":"+portField.getText()+"/manager");
+            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+nameField, this);
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
-            showErrorMessage("Could not connect to rmi registry.");
+            uiUtils.showErrorMessage("Could not connect to rmi registry.");
         }
     }
 
@@ -83,21 +87,14 @@ public class Client extends UnicastRemoteObject implements IClient {
                 Thread.sleep(awaitingOrder.displayPeriod.toMillis());
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                showErrorMessage("Could not initialize sleep on order awaiting thread.");
+                uiUtils.showErrorMessage("Could not initialize sleep on order awaiting thread.");
                 Thread.currentThread().interrupt();
             }
             orderMap.remove(orderId);
             listModel.removeElement(awaitingOrder);
         });
         orderThread.start();
-        showSuccessMessage("Successfully placed new order with id: "+orderId);
-    }
-
-    public void showSuccessMessage(String message){
-        JOptionPane.showMessageDialog(mainPanel, message, "Success", JOptionPane.INFORMATION_MESSAGE);
-    }
-    public void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(mainPanel, message, "Error", JOptionPane.ERROR_MESSAGE);
+        uiUtils.showSuccessMessage("Successfully placed new order with id: "+orderId);
     }
 
 }
