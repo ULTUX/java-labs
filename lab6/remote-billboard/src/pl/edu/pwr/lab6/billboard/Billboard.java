@@ -5,12 +5,17 @@ import pl.edu.pwr.lab6.libs.IManager;
 import pl.edu.pwr.lab6.libs.Order;
 import pl.edu.pwr.lab6.libs.UIUtils;
 
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.net.MalformedURLException;
+import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.Duration;
 import java.util.Map;
@@ -27,8 +32,8 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     private JTextField portField;
     private JPanel mainPanel;
     private JTextArea adDisplay;
-    private Map<Integer, Order> ads = new ConcurrentHashMap<>();
-    private Map<Order, Long> adDisplayTime = new ConcurrentHashMap<>();
+    private final Map<Integer, Order> ads = new ConcurrentHashMap<>();
+    private final Map<Order, Long> adDisplayTime = new ConcurrentHashMap<>();
     Duration displayInterval = Duration.ofSeconds(2);
     private transient IManager manager;
     private final UIUtils uiUtils;
@@ -93,11 +98,18 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
 
     private void connectClicked() {
         try {
-            manager = (IManager) Naming.lookup("rmi://"+hostField.getText()+":"+portField.getText()+"/manager");
-            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+billboardName.getText(), this);
+            var path = Paths.get("./lab6/remote-billboard/keystore");
+            System.out.println(path.toAbsolutePath().toString());
+            System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
+            System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
+            System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
+            System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
+            Registry reg = LocateRegistry.getRegistry("localhost", 1099, new SslRMIClientSocketFactory());
+            manager = (IManager) reg.lookup("manager");
             manager.bindBillboard(this);
-        } catch (NotBoundException | MalformedURLException | RemoteException e) {
+        } catch (NotBoundException | RemoteException e) {
             uiUtils.showErrorMessage("Could not connect to rmi registry.");
+            e.printStackTrace();
         }
     }
 
