@@ -1,14 +1,16 @@
 package pl.edu.pwr.lab6.manager;
 
-import pl.edu.pwr.lab6.libs.IBillboard;
-import pl.edu.pwr.lab6.libs.IManager;
-import pl.edu.pwr.lab6.libs.Order;
+import pl.edu.pwr.lab6.libs.*;
 
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+import javax.rmi.ssl.SslRMIServerSocketFactory;
 import javax.swing.*;
 import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +20,18 @@ public class Manager extends UnicastRemoteObject implements IManager {
 
     private JPanel panel1;
     private JList<IBillboard> list1;
-    private DefaultListModel<IBillboard> listModel = new DefaultListModel<>();
-    Map<Integer, IBillboard> billboardList = new HashMap();
+    private final DefaultListModel<IBillboard> listModel = new DefaultListModel<>();
+    private final Map<Integer, IBillboard> billboardList = new HashMap<>();
 
-    protected Manager() throws RemoteException, MalformedURLException {
-        LocateRegistry.createRegistry(1099);
-        Naming.rebind("//localhost:1099/manager", this);
+    protected Manager() throws RemoteException {
+        var path = Paths.get("./lab6/remote-manager/keystore");
+        System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
+        System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
+        System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
+        System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
+
+        Registry reg = LocateRegistry.createRegistry(1099, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory(null, null, null, true));
+        reg.rebind("manager", this);
         list1.setModel(listModel);
     }
 
@@ -50,7 +58,6 @@ public class Manager extends UnicastRemoteObject implements IManager {
     @Override
     public boolean placeOrder(Order order) throws RemoteException {
         var wasAdded = new AtomicBoolean(false);
-        System.out.println("Place order called for order");
         billboardList.forEach((id, iBillboard) -> {
             try {
                 if (iBillboard.getCapacity()[1] > 0){

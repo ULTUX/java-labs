@@ -1,16 +1,17 @@
 package pl.edu.pwr.lab6.client;
 
-import pl.edu.pwr.lab6.libs.IClient;
-import pl.edu.pwr.lab6.libs.IManager;
-import pl.edu.pwr.lab6.libs.Order;
-import pl.edu.pwr.lab6.libs.UIUtils;
+import pl.edu.pwr.lab6.libs.*;
 
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.Duration;
 import java.util.HashMap;
@@ -71,9 +72,14 @@ public class Client extends UnicastRemoteObject implements IClient {
 
     private void connectClicked() {
         try {
-            manager = (IManager) Naming.lookup("rmi://"+hostField.getText()+":"+portField.getText()+"/manager");
-            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+nameField.getText(), this);
-        } catch (NotBoundException | MalformedURLException | RemoteException e) {
+            var path = Paths.get("./lab6/remote-client/keystore");
+            System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
+            System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
+            System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
+            System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
+            Registry reg = LocateRegistry.getRegistry("localhost", 1099, new SslRMIClientSocketFactory());
+            manager = (IManager) reg.lookup("manager");
+        } catch (NotBoundException | RemoteException  e) {
             e.printStackTrace();
             uiUtils.showErrorMessage("Could not connect to rmi registry.");
         }

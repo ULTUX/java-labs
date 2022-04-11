@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
         var manager = new Client();
         var frame = new JFrame();
+        frame.setTitle("Client");
         frame.setContentPane(manager.getPanel1());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
