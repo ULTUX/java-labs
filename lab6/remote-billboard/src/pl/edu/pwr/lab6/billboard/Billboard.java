@@ -6,6 +6,7 @@ import pl.edu.pwr.lab6.libs.Order;
 import pl.edu.pwr.lab6.libs.UIUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -36,6 +37,24 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     protected Billboard() throws RemoteException {
         uiUtils = new UIUtils(mainPanel);
         connectButton.addActionListener(e -> connectClicked());
+        startButton.addActionListener(e -> {
+            try {
+                start();
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+        stopButton.addActionListener(e -> {
+            try {
+                stop();
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    public Container getPanel1() {
+        return mainPanel;
     }
 
     private class AdCycleTask implements Runnable {
@@ -46,6 +65,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
                     adDisplay.setText(order.advertText);
                     try {
                         Thread.sleep(displayInterval.toMillis());
+                        adDisplay.setText("");
                         long remainingAdDisplayTime;
                         if (adDisplayTime.containsKey(order)){
                             remainingAdDisplayTime = adDisplayTime.get(order) - displayInterval.toSeconds();
@@ -74,7 +94,8 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     private void connectClicked() {
         try {
             manager = (IManager) Naming.lookup("rmi://"+hostField.getText()+":"+portField.getText()+"/manager");
-            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+billboardName, this);
+            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+billboardName.getText(), this);
+            manager.bindBillboard(this);
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             uiUtils.showErrorMessage("Could not connect to rmi registry.");
         }
@@ -83,6 +104,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
 
     @Override
     public boolean addAdvertisement(String advertText, Duration displayPeriod, int orderId) throws RemoteException {
+        System.out.println("Add advert called for text:"+ advertText);
         var order = new Order(advertText, displayPeriod);
         if (getCapacity()[1] > 0){
             ads.put(orderId, order);
@@ -110,7 +132,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
 
     @Override
     public boolean start() throws RemoteException {
-        if (adCycle == null || adCycle.isAlive()) return false;
+        if (adCycle != null && adCycle.isAlive()) return false;
         adCycle = new Thread(new AdCycleTask());
         adCycle.start();
         return true;
@@ -119,7 +141,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     @Override
     public boolean stop() throws RemoteException {
         if (adCycle == null || !adCycle.isAlive()) return false;
-        adCycle.interrupt();
+        adCycle.stop();
         return true;
     }
 

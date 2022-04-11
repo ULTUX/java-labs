@@ -6,6 +6,7 @@ import pl.edu.pwr.lab6.libs.Order;
 import pl.edu.pwr.lab6.libs.UIUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -28,11 +29,11 @@ public class Client extends UnicastRemoteObject implements IClient {
     private JButton connectButton;
     private JPanel mainPanel;
     private transient IManager manager;
-    private final UIUtils uiUtils;
+    private transient final UIUtils uiUtils;
     private Order awaitingOrder;
 
     protected Client() throws RemoteException, MalformedURLException, NotBoundException {
-        uiUtils = new UIUtils(mainPanel);
+        uiUtils = new UIUtils(null);
         connectButton.addActionListener(e -> connectClicked());
 
         orderList.setModel(listModel);
@@ -61,8 +62,8 @@ public class Client extends UnicastRemoteObject implements IClient {
         var displayPeriod = JOptionPane.showInputDialog("Please provide display period (in seconds).");
         var order = new Order(adText, Duration.ofSeconds(Long.parseLong(displayPeriod)), this);
         try {
-            manager.placeOrder(order);
             awaitingOrder = order;
+            manager.placeOrder(order);
         } catch (RemoteException e) {
             uiUtils.showErrorMessage("Could not place an order.");
         }
@@ -71,8 +72,9 @@ public class Client extends UnicastRemoteObject implements IClient {
     private void connectClicked() {
         try {
             manager = (IManager) Naming.lookup("rmi://"+hostField.getText()+":"+portField.getText()+"/manager");
-            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+nameField, this);
+            Naming.rebind("//"+hostField.getText()+":"+portField.getText()+"/"+nameField.getText(), this);
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
+            e.printStackTrace();
             uiUtils.showErrorMessage("Could not connect to rmi registry.");
         }
     }
@@ -80,6 +82,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 
     @Override
     public void setOrderId(int orderId) throws RemoteException {
+        if (orderId == -1){
+            uiUtils.showErrorMessage("Could not create new order.");
+            return;
+        }
         listModel.addElement(awaitingOrder);
         orderMap.put(orderId, awaitingOrder);
         Thread orderThread = new Thread(() -> {
@@ -97,4 +103,7 @@ public class Client extends UnicastRemoteObject implements IClient {
         uiUtils.showSuccessMessage("Successfully placed new order with id: "+orderId);
     }
 
+    public Container getPanel1() {
+        return mainPanel;
+    }
 }

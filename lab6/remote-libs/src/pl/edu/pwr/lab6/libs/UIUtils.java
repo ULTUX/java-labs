@@ -11,9 +11,9 @@ public class UIUtils {
                                                         }
 
     public void showSuccessMessage(String message){
-        JOptionPane.showMessageDialog(parent, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parent, message, "Success", JOptionPane.INFORMATION_MESSAGE));
     }
     public void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE));
     }
 }

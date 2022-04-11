@@ -50,16 +50,20 @@ public class Manager extends UnicastRemoteObject implements IManager {
     @Override
     public boolean placeOrder(Order order) throws RemoteException {
         var wasAdded = new AtomicBoolean(false);
+        System.out.println("Place order called for order");
         billboardList.forEach((id, iBillboard) -> {
             try {
                 if (iBillboard.getCapacity()[1] > 0){
-                    iBillboard.addAdvertisement(order.advertText, order.displayPeriod, id);
+                    int orderId = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+                    iBillboard.addAdvertisement(order.advertText, order.displayPeriod, orderId);
+                    order.client.setOrderId(orderId);
                     wasAdded.set(true);
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         });
+        if (!wasAdded.get()) order.client.setOrderId(-1);
         return wasAdded.get();
     }
 
