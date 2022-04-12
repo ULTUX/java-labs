@@ -1,0 +1,8 @@
+grant {
+    permission java.net.SocketPermission "*:1024-65535", "accept,connect";
+    permission java.util.PropertyPermission "user.dir", "read";
+    permission java.util.PropertyPermission "javax.net.ssl.trustStore", "write";
+    permission java.util.PropertyPermission "javax.net.ssl.trustStorePassword", "write";
+    permission java.util.PropertyPermission "javax.net.ssl.keyStore", "write";
+    permission java.util.PropertyPermission "javax.net.ssl.keyStorePassword", "write";
+};

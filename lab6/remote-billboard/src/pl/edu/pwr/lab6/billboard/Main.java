@@ -3,6 +3,7 @@ package pl.edu.pwr.lab6.billboard;
 import javax.swing.*;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 
 public class Main {

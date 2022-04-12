@@ -6,6 +6,7 @@ import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.rmi.ssl.SslRMIServerSocketFactory;
 import javax.swing.*;
 import java.nio.file.Paths;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -22,6 +23,10 @@ public class Manager extends UnicastRemoteObject implements IManager {
     private final Map<Integer, IBillboard> billboardList = new HashMap<>();
 
     protected Manager() throws RemoteException {
+        System.setProperty("java.security.policy", "/home/ultux/IdeaProjects/wnowak_252700_java/lab6/remote-manager/policy.policy");
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
         var path = Paths.get("./lab6/remote-manager/keystore");
         System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
         System.setProperty("javax.net.ssl.trustStorePassword", "passwd");

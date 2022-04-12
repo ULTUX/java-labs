@@ -1,6 +1,7 @@
 package pl.edu.pwr.lab6.manager;
 
 import javax.swing.*;
+import java.rmi.RMISecurityManager;
 
 public class Main {
     public static void main(String[] args) throws Exception {
