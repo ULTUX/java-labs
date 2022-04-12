@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.nio.file.Paths;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -114,7 +113,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     private void connectClicked() {
         try {
             var path = Paths.get("./lab6/remote-billboard/keystore");
-            System.out.println(path.toAbsolutePath().toString());
+            System.out.println(path.toAbsolutePath());
             System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
             System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
             System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());

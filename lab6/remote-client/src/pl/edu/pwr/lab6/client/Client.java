@@ -20,8 +20,8 @@ import java.util.Map;
 public class Client extends UnicastRemoteObject implements IClient {
 
     private JList<Order> orderList;
-    private DefaultListModel<Order> listModel = new DefaultListModel<>();
-    private Map<Integer, Order> orderMap = new HashMap<>();
+    private final DefaultListModel<Order> listModel = new DefaultListModel<>();
+    private final Map<Integer, Order> orderMap = new HashMap<>();
     private JTextField hostField;
     private JTextField nameField;
     private JButton cancelSelectedButton;
