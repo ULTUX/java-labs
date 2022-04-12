@@ -86,7 +86,10 @@
               </grid>
             </constraints>
             <properties>
+              <editable value="false"/>
+              <enabled value="true"/>
               <font size="36"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

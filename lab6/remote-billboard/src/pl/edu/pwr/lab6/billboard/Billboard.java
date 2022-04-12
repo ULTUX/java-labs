@@ -8,10 +8,10 @@ import pl.edu.pwr.lab6.libs.UIUtils;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.swing.*;
 import java.awt.*;
-import java.net.MalformedURLException;
-import java.nio.file.FileSystems;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.nio.file.Paths;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -38,8 +38,11 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     private transient IManager manager;
     private final UIUtils uiUtils;
     private Thread adCycle;
+    private int id;
+    private final JFrame parentFrame;
 
-    protected Billboard() throws RemoteException {
+    protected Billboard(JFrame parentFrame) throws RemoteException {
+        this.parentFrame = parentFrame;
         uiUtils = new UIUtils(mainPanel);
         connectButton.addActionListener(e -> connectClicked());
         startButton.addActionListener(e -> {
@@ -54,6 +57,18 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
                 stop();
             } catch (RemoteException ex) {
                 ex.printStackTrace();
+            }
+        });
+        parentFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (id != -1) {
+                    try {
+                        manager.unbindBillboard(id);
+                    } catch (RemoteException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
         });
     }
@@ -106,7 +121,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
             System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
             Registry reg = LocateRegistry.getRegistry(hostField.getText(), Integer.parseInt(portField.getText()), new SslRMIClientSocketFactory());
             manager = (IManager) reg.lookup("manager");
-            manager.bindBillboard(this);
+            id = manager.bindBillboard(this);
         } catch (NotBoundException | RemoteException e) {
             uiUtils.showErrorMessage("Could not connect to rmi registry.");
             e.printStackTrace();

@@ -6,7 +6,6 @@ import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.rmi.ssl.SslRMIServerSocketFactory;
 import javax.swing.*;
 import java.nio.file.Paths;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -18,8 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Manager extends UnicastRemoteObject implements IManager {
 
     private JPanel panel1;
-    private JList<IBillboard> list1;
-    private final DefaultListModel<IBillboard> listModel = new DefaultListModel<>();
+    private JList<Integer> list1;
+    private final DefaultListModel<Integer> listModel = new DefaultListModel<>();
     private final Map<Integer, IBillboard> billboardList = new HashMap<>();
 
     protected Manager() throws RemoteException {
@@ -42,7 +41,7 @@ public class Manager extends UnicastRemoteObject implements IManager {
     public int bindBillboard(IBillboard billboard) throws RemoteException {
         int id = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
         billboardList.put(id, billboard);
-        listModel.addElement(billboard);
+        listModel.addElement(id);
         return id;
     }
 
@@ -50,7 +49,7 @@ public class Manager extends UnicastRemoteObject implements IManager {
     public boolean unbindBillboard(int billboardId) throws RemoteException {
         try {
             billboardList.remove(billboardId);
-            listModel.removeElement(billboardList.get(billboardId));
+            listModel.removeElement(billboardId);
             return true;
         }
         catch (IndexOutOfBoundsException e){
