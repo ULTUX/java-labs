@@ -24,14 +24,15 @@ public class Manager extends UnicastRemoteObject implements IManager {
 
     protected Manager(String regName) throws RemoteException {
         this.regName = regName;
-        System.setProperty("java.security.policy", "/home/ultux/IdeaProjects/wnowak_252700_java/lab6/remote-manager/policy.policy");
+        var policyPath = Paths.get("./lab6/remote-manager/policy.policy");
+        var keystorePath = Paths.get("./lab6/remote-manager/keystore");
+        System.setProperty("java.security.policy", policyPath.toAbsolutePath().toString());
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
-        var path = Paths.get("./lab6/remote-manager/keystore");
-        System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
+        System.setProperty("javax.net.ssl.trustStore", keystorePath.toAbsolutePath().toString());
         System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
-        System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
+        System.setProperty("javax.net.ssl.keyStore", keystorePath.toAbsolutePath().toString());
         System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
 
         Registry reg = LocateRegistry.createRegistry(1099, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory(null, null, null, true));
