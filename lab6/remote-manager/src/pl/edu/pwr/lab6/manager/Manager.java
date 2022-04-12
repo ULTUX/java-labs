@@ -20,8 +20,10 @@ public class Manager extends UnicastRemoteObject implements IManager {
     private JList<Integer> list1;
     private final DefaultListModel<Integer> listModel = new DefaultListModel<>();
     private final Map<Integer, IBillboard> billboardList = new HashMap<>();
+    private final String regName;
 
-    protected Manager() throws RemoteException {
+    protected Manager(String regName) throws RemoteException {
+        this.regName = regName;
         System.setProperty("java.security.policy", "/home/ultux/IdeaProjects/wnowak_252700_java/lab6/remote-manager/policy.policy");
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
@@ -33,7 +35,7 @@ public class Manager extends UnicastRemoteObject implements IManager {
         System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
 
         Registry reg = LocateRegistry.createRegistry(1099, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory(null, null, null, true));
-        reg.rebind("manager", this);
+        reg.rebind(regName, this);
         list1.setModel(listModel);
     }
 

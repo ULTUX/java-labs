@@ -112,6 +112,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
 
     private void connectClicked() {
         try {
+            String managerRegName = JOptionPane.showInputDialog(mainPanel, "Please provide manager registry name");
             var path = Paths.get("./lab6/remote-billboard/keystore");
             System.out.println(path.toAbsolutePath());
             System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
@@ -119,7 +120,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
             System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
             System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
             Registry reg = LocateRegistry.getRegistry(hostField.getText(), Integer.parseInt(portField.getText()), new SslRMIClientSocketFactory());
-            manager = (IManager) reg.lookup("manager");
+            manager = (IManager) reg.lookup(managerRegName);
             id = manager.bindBillboard(this);
         } catch (NotBoundException | RemoteException e) {
             uiUtils.showErrorMessage("Could not connect to rmi registry.");

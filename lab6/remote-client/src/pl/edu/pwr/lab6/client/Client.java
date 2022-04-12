@@ -72,13 +72,14 @@ public class Client extends UnicastRemoteObject implements IClient {
 
     private void connectClicked() {
         try {
+            String managerRegName = JOptionPane.showInputDialog(mainPanel, "Please provide manager registry name");
             var path = Paths.get("./lab6/remote-client/keystore");
             System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
             System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
             System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
             System.setProperty("javax.net.ssl.keyStorePassword", "passwd");
             Registry reg = LocateRegistry.getRegistry(hostField.getText(), Integer.parseInt(portField.getText()), new SslRMIClientSocketFactory());
-            manager = (IManager) reg.lookup("manager");
+            manager = (IManager) reg.lookup(managerRegName);
         } catch (NotBoundException | RemoteException  e) {
             e.printStackTrace();
             uiUtils.showErrorMessage("Could not connect to rmi registry.");
