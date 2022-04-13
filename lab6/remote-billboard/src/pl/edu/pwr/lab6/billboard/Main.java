@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 public class Main {
 
-    public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
+    public static void main(String[] args) throws RemoteException {
         var frame = new JFrame();
         var manager = new Billboard(frame);
         frame.setTitle("Billboard");

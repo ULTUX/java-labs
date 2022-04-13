@@ -41,6 +41,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
     private final JFrame parentFrame;
 
     protected Billboard(JFrame parentFrame) throws RemoteException {
+        displayInterval = Duration.ofSeconds(Long.parseLong(JOptionPane.showInputDialog(mainPanel, "Please provide ad display interval (s)")));
         this.parentFrame = parentFrame;
         uiUtils = new UIUtils(mainPanel);
         connectButton.addActionListener(e -> connectClicked());
@@ -58,7 +59,7 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
                 ex.printStackTrace();
             }
         });
-        parentFrame.addWindowListener(new WindowAdapter() {
+        this.parentFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 if (id != -1) {
@@ -95,7 +96,6 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
                         if (remainingAdDisplayTime < 0){
                             ads.remove(integer);
                             adDisplayTime.remove(order);
-                            System.out.println("Ad cycle finished, removing");
                         }
                         else {
                             adDisplayTime.put(order, remainingAdDisplayTime);
@@ -114,7 +114,6 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
         try {
             String managerRegName = JOptionPane.showInputDialog(mainPanel, "Please provide manager registry name");
             var path = Paths.get("./lab6/remote-billboard/keystore");
-            System.out.println(path.toAbsolutePath());
             System.setProperty("javax.net.ssl.trustStore", path.toAbsolutePath().toString());
             System.setProperty("javax.net.ssl.trustStorePassword", "passwd");
             System.setProperty("javax.net.ssl.keyStore", path.toAbsolutePath().toString());
@@ -131,7 +130,6 @@ public class Billboard extends UnicastRemoteObject implements IBillboard {
 
     @Override
     public boolean addAdvertisement(String advertText, Duration displayPeriod, int orderId) throws RemoteException {
-        System.out.println("Add advert called for text:"+ advertText);
         var order = new Order(advertText, displayPeriod);
         if (getCapacity()[1] > 0){
             ads.put(orderId, order);

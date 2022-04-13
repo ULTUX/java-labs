@@ -65,11 +65,12 @@ public class Manager extends UnicastRemoteObject implements IManager {
         var wasAdded = new AtomicBoolean(false);
         billboardList.forEach((id, iBillboard) -> {
             try {
-                if (iBillboard.getCapacity()[1] > 0){
+                if (iBillboard.getCapacity()[1] > 0 && !wasAdded.get()){
                     int orderId = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
                     iBillboard.addAdvertisement(order.advertText, order.displayPeriod, orderId);
                     order.client.setOrderId(orderId);
                     wasAdded.set(true);
+
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
