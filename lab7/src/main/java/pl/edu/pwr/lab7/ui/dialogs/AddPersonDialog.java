@@ -1,23 +1,21 @@
-package pl.edu.pwr.lab7.ui;
+package pl.edu.pwr.lab7.ui.dialogs;
 
-import pl.edu.pwr.lab7.event.Event;
-import pl.edu.pwr.lab7.event.EventService;
+import pl.edu.pwr.lab7.person.Person;
+import pl.edu.pwr.lab7.person.PersonService;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
 
-public class AddEventDialog extends JDialog {
-    private final EventService eventService;
+public class AddPersonDialog extends JDialog {
+    private final PersonService personService;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField location;
-    private JTextField time;
-    private JTextField eventName;
+    private JTextField fName;
+    private JTextField lName;
 
-    public AddEventDialog(EventService eventService) {
-        this.eventService = eventService;
+    public AddPersonDialog(PersonService personService) {
+        this.personService = personService;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -36,19 +34,17 @@ public class AddEventDialog extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onOK() {
         try {
-            var event = new Event();
-            event.setName(eventName.getText());
-            event.setLocation(location.getText());
-            event.setTime(LocalDateTime.parse(time.getText()));
-            eventService.addEvent(event);
+            var person = new Person();
+            person.setFirstName(fName.getText());
+            person.setLastName(lName.getText());
+            personService.addPerson(person);
         }
-        catch (Exception e) {
+        catch (Exception e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Could not parse input data", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -56,7 +52,6 @@ public class AddEventDialog extends JDialog {
     }
 
     private void onCancel() {
-        // add your code here if necessary
         dispose();
     }
 

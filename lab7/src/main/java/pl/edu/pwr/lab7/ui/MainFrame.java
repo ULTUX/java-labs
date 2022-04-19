@@ -5,6 +5,10 @@ import pl.edu.pwr.lab7.installment.Installment;
 import pl.edu.pwr.lab7.installment.InstallmentService;
 import pl.edu.pwr.lab7.payment.PaymentService;
 import pl.edu.pwr.lab7.person.PersonService;
+import pl.edu.pwr.lab7.ui.dialogs.AddEventDialog;
+import pl.edu.pwr.lab7.ui.dialogs.AddInstallmentDialog;
+import pl.edu.pwr.lab7.ui.dialogs.AddPaymentDialog;
+import pl.edu.pwr.lab7.ui.dialogs.AddPersonDialog;
 
 import javax.swing.*;
 import java.util.ArrayList;

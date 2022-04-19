@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.ui;
+package pl.edu.pwr.lab7.ui.dialogs;
 
 import pl.edu.pwr.lab7.event.Event;
 import pl.edu.pwr.lab7.event.EventService;
