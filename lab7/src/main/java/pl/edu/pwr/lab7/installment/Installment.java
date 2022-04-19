@@ -3,7 +3,7 @@ package pl.edu.pwr.lab7.installment;
 import pl.edu.pwr.lab7.event.Event;
 
 import javax.persistence.*;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "installment")
@@ -21,7 +21,7 @@ public class Installment {
     private Integer installmentNum;
 
     @Column(name = "\"time\"", nullable = false)
-    private LocalTime time;
+    private LocalDateTime time;
 
     @Column(name = "amount", nullable = false)
     private Double amount;
@@ -34,11 +34,11 @@ public class Installment {
         this.amount = amount;
     }
 
-    public LocalTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
@@ -64,5 +64,10 @@ public class Installment {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(installmentNum);
     }
 }

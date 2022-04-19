@@ -4,7 +4,7 @@ import pl.edu.pwr.lab7.CSVReader;
 import pl.edu.pwr.lab7.event.EventService;
 
 import java.io.FileNotFoundException;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class InstallmentCSVReader extends CSVReader<Installment> {
                         installment.setEvent(event);
                         break;
                     case "time":
-                        installment.setTime(LocalTime.parse(datum[j]));
+                        installment.setTime(LocalDateTime.parse(datum[j]));
                         break;
                     default:
                         throw new IllegalArgumentException();
