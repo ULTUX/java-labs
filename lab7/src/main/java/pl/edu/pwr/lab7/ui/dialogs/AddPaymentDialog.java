@@ -11,6 +11,7 @@ import pl.edu.pwr.lab7.person.PersonService;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class AddPaymentDialog extends JDialog {
@@ -24,9 +25,9 @@ public class AddPaymentDialog extends JDialog {
     private JTextField paymentTime;
     private JTextField amount;
     private JTextField installment;
-    private JComboBox personSelector;
-    private JComboBox eventSelector;
-    private JComboBox installmentSelector;
+    private JComboBox<Person> personSelector;
+    private JComboBox<Event> eventSelector;
+    private JComboBox<Installment> installmentSelector;
 
     public AddPaymentDialog(PaymentService paymentService, PersonService personService, EventService eventService, InstallmentService installmentService) {
         this.installmentService = installmentService;
@@ -38,9 +39,9 @@ public class AddPaymentDialog extends JDialog {
         this.personService = personService;
         this.eventService = eventService;
 
-        personSelector.setModel(new DefaultComboBoxModel(personService.getAll().toArray(new Person[0])));
-        eventSelector.setModel(new DefaultComboBoxModel(eventService.getAll().toArray(new Event[0])));
-        installmentSelector.setModel(new DefaultComboBoxModel(installmentService.getAll().toArray(new Installment[0])));
+        personSelector.setModel(new DefaultComboBoxModel<>(personService.getAll().toArray(new Person[0])));
+        eventSelector.setModel(new DefaultComboBoxModel<>(eventService.getAll().toArray(new Event[0])));
+        installmentSelector.setModel(new DefaultComboBoxModel<>(installmentService.getAll().toArray(new Installment[0])));
 
         buttonOK.addActionListener(e -> onOK());
 
@@ -64,7 +65,7 @@ public class AddPaymentDialog extends JDialog {
         // add your code here
         try {
             var payment = new Payment();
-            payment.setTime(LocalTime.parse(paymentTime.getText()));
+            payment.setTime(LocalDateTime.parse(paymentTime.getText()));
             payment.setEvent((Event) eventSelector.getSelectedItem());
             payment.setInstallment((Installment) installmentSelector.getSelectedItem());
             payment.setAmount(Double.valueOf(amount.getText()));

@@ -6,7 +6,7 @@ import pl.edu.pwr.lab7.installment.InstallmentService;
 import pl.edu.pwr.lab7.person.PersonService;
 
 import java.io.FileNotFoundException;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class PaymentCSVReader extends CSVReader<Payment> {
                         payment.setInstallment(installment);
                         break;
                     case "time":
-                        payment.setTime(LocalTime.parse(datum[j]));
+                        payment.setTime(LocalDateTime.parse(datum[j]));
                         break;
                     case "person":
                         var person = personService.getById(Integer.parseInt(datum[j]));

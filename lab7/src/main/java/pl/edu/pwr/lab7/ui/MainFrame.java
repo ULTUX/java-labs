@@ -47,8 +47,8 @@ public class MainFrame extends JFrame {
 
     private void addButtonClicked() {
         var selection = (String) JOptionPane.showInputDialog(this, "What to add?", "Add...",
-                JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Person", "Event", "Installment", "Payment"}, "User");
-
+                JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Person", "Event", "Installment", "Payment"}, "Person");
+        if (selection == null) return;
         switch (selection) {
             case "Person":
                 var pDialog = new AddPersonDialog(personService);

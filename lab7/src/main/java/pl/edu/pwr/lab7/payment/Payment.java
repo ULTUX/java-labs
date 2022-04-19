@@ -5,7 +5,7 @@ import pl.edu.pwr.lab7.installment.Installment;
 import pl.edu.pwr.lab7.person.Person;
 
 import javax.persistence.*;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payment")
@@ -16,7 +16,7 @@ public class Payment {
     private Integer id;
 
     @Column(name = "\"time\"", nullable = false)
-    private LocalTime time;
+    private LocalDateTime time;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "installment_id", nullable = false)
@@ -65,11 +65,11 @@ public class Payment {
         this.installment = installment;
     }
 
-    public LocalTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
