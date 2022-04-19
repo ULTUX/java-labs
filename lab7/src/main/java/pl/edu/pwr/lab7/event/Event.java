@@ -1,7 +1,7 @@
 package pl.edu.pwr.lab7.event;
 
 import javax.persistence.*;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "event")
@@ -18,13 +18,13 @@ public class Event {
     private String location;
 
     @Column(name = "\"time\"", nullable = false)
-    private LocalTime time;
+    private LocalDateTime time;
 
-    public LocalTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
