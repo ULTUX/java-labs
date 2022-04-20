@@ -19,7 +19,9 @@
         <children>
           <component id="1dad5" class="javax.swing.JTable" binding="paidTable">
             <constraints/>
-            <properties/>
+            <properties>
+              <enabled value="false"/>
+            </properties>
           </component>
         </children>
       </scrollpane>
@@ -56,7 +58,9 @@
         <children>
           <component id="d3a0" class="javax.swing.JTable" binding="pendingTable">
             <constraints/>
-            <properties/>
+            <properties>
+              <enabled value="false"/>
+            </properties>
           </component>
         </children>
       </scrollpane>

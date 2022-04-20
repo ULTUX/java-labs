@@ -114,7 +114,7 @@ public class MainFrame extends JFrame {
         List<String[]> pendingSplit = new ArrayList<>();
         for (Installment curr : pending) {
             pendingSplit.add(new String[]{curr.getEvent().getName(), String.valueOf(curr.getInstallmentNum()),
-                    String.valueOf(curr.getTime()), String.valueOf(curr.getAmount())});
+                    String.valueOf(curr.getTime()).replace('T', ' '), String.valueOf(curr.getAmount())});
         }
         var pendingTableModel = new DefaultTableModel(pendingSplit.toArray(
                 new String[pendingSplit.size()][]),
@@ -125,7 +125,7 @@ public class MainFrame extends JFrame {
         List<String[]> paidSplit = new ArrayList<>();
         for (Payment curr : payments) {
             paidSplit.add(
-                    new String[]{String.valueOf(curr.getTime()),
+                    new String[]{String.valueOf(curr.getTime()).replace('T', ' '),
                             String.valueOf(curr.getAmount()),
                             curr.getPerson().getFirstName() + " " + curr.getPerson().getLastName(),
                             curr.getEvent().getName(),
