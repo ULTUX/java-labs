@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.time.LocalDateTime;
 
 public class AddEventDialog extends JDialog {
-    private final EventService eventService;
+    private final transient EventService eventService;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;

@@ -8,12 +8,10 @@ import pl.edu.pwr.lab7.installment.InstallmentService;
 import javax.swing.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 public class AddInstallmentDialog extends JDialog {
-    private final EventService eventService;
-    private final InstallmentService installmentService;
+    private final transient InstallmentService installmentService;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -21,7 +19,6 @@ public class AddInstallmentDialog extends JDialog {
     private JTextField paymentTime;
     private JTextField amount;
     private JComboBox<Event> eventSelector;
-    private List<Event> eventList;
 
     public AddInstallmentDialog(EventService eventService, InstallmentService installmentService) {
         this.installmentService = installmentService;
@@ -29,8 +26,7 @@ public class AddInstallmentDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        this.eventService = eventService;
-        eventList = eventService.getAll();
+        List<Event> eventList = eventService.getAll();
         eventSelector.setModel(new DefaultComboBoxModel<>(eventList.toArray(new Event[0])));
 
         buttonOK.addActionListener(e -> onOK());

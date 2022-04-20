@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class AddPersonDialog extends JDialog {
-    private final PersonService personService;
+    private final transient PersonService personService;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;

@@ -12,33 +12,25 @@ import pl.edu.pwr.lab7.person.PersonService;
 import javax.swing.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class AddPaymentDialog extends JDialog {
-    private final PaymentService paymentService;
-    private final PersonService personService;
-    private final EventService eventService;
-    private final InstallmentService installmentService;
+    private final transient PaymentService paymentService;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField paymentTime;
     private JTextField amount;
-    private JTextField installment;
     private JComboBox<Person> personSelector;
     private JComboBox<Event> eventSelector;
     private JComboBox<Installment> installmentSelector;
 
     public AddPaymentDialog(PaymentService paymentService, PersonService personService, EventService eventService, InstallmentService installmentService) {
-        this.installmentService = installmentService;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         this.paymentService = paymentService;
-        this.personService = personService;
-        this.eventService = eventService;
 
         paymentTime.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
 
