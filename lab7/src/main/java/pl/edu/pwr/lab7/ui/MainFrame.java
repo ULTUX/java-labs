@@ -9,6 +9,7 @@ import pl.edu.pwr.lab7.installment.Installment;
 import pl.edu.pwr.lab7.installment.InstallmentService;
 import pl.edu.pwr.lab7.payment.Payment;
 import pl.edu.pwr.lab7.payment.PaymentService;
+import pl.edu.pwr.lab7.person.PersonCSVReader;
 import pl.edu.pwr.lab7.person.PersonService;
 import pl.edu.pwr.lab7.ui.dialogs.AddEventDialog;
 import pl.edu.pwr.lab7.ui.dialogs.AddInstallmentDialog;
@@ -16,6 +17,7 @@ import pl.edu.pwr.lab7.ui.dialogs.AddPaymentDialog;
 import pl.edu.pwr.lab7.ui.dialogs.AddPersonDialog;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ public class MainFrame extends JFrame {
     private JTable pendingTable;
     private JTable paidTable;
     private JButton addButton;
-    private JButton removeButton;
     private JButton importFromCSVButton;
     private JButton fastForwardButton;
     private JPanel mainPanel;
@@ -58,6 +59,7 @@ public class MainFrame extends JFrame {
         addButton.addActionListener(e -> addButtonClicked());
 
         fastForwardButton.addActionListener(e -> ffClicked());
+        importFromCSVButton.addActionListener(e -> importFromCSVClicked());
         reloadTables();
     }
 
@@ -99,6 +101,40 @@ public class MainFrame extends JFrame {
 
         var paidTableModel = new DefaultTableModel(paidSplit.toArray(new String[paidSplit.size()][]), new String[]{"Date", "Amount", "Person", "Event", "Installment"});
         paidTable.setModel(paidTableModel);
+    }
+
+    private void importFromCSVClicked() {
+        var selection = (String) JOptionPane.showInputDialog(this, "What to import?", "Add...",
+                JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Person", "Event", "Installment", "Payment"}, "Person");
+        if (selection == null) return;
+        var fileSelector = new JFileChooser();
+        fileSelector.setAcceptAllFileFilterUsed(false);
+        fileSelector.setMultiSelectionEnabled(false);
+        fileSelector.setFileFilter(new FileNameExtensionFilter("CSV files (.csv)", "csv"));
+        var file = fileSelector.showOpenDialog(this);
+        if (file != JFileChooser.APPROVE_OPTION) return;
+        var filePath = fileSelector.getSelectedFile().toPath().toAbsolutePath().toString();
+        try {
+        switch (selection) {
+            case "Person":
+                personService.importFromFile(filePath);
+                break;
+            case "Event":
+                eventService.importFromFile(filePath);
+                break;
+            case "Installment":
+                installmentService.importFromFile(filePath);
+                break;
+            case "Payment":
+                paymentService.importFromFile(filePath);
+                break;
+            default:
+                throw new IllegalStateException("User did not select anything (that should be impossible");
+        }
+        JOptionPane.showMessageDialog(this, "Successfully imported!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Could not import selected file, contents may be invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void addButtonClicked() {
