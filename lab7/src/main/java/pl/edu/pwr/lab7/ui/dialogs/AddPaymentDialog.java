@@ -25,7 +25,12 @@ public class AddPaymentDialog extends JDialog {
     private JComboBox<Event> eventSelector;
     private JComboBox<Installment> installmentSelector;
 
-    public AddPaymentDialog(PaymentService paymentService, PersonService personService, EventService eventService, InstallmentService installmentService) {
+    public AddPaymentDialog(
+            PaymentService paymentService,
+            PersonService personService,
+            EventService eventService,
+            InstallmentService installmentService
+    ) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -68,7 +73,10 @@ public class AddPaymentDialog extends JDialog {
             paymentService.addPayment(payment);
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Could not parse input data", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Could not parse input data",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
         dispose();
     }

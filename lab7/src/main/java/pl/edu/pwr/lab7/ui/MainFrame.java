@@ -40,7 +40,12 @@ public class MainFrame extends JFrame {
     private final transient List<Installment> pendingList = new ArrayList<>();
     private final transient List<Payment> paidList = new ArrayList<>();
 
-    public MainFrame(PaymentService paymentService, EventService eventService, PersonService personService, InstallmentService installmentService) {
+    public MainFrame(
+            PaymentService paymentService,
+            EventService eventService,
+            PersonService personService,
+            InstallmentService installmentService
+    ) {
         super("Statistic analysis tool");
         this.setContentPane(this.mainPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -60,15 +65,41 @@ public class MainFrame extends JFrame {
     }
 
     private void ffClicked() {
-        var providedTime = JOptionPane.showInputDialog(this, "Please provide new time to fast forward to.", "Fast forward", JOptionPane.QUESTION_MESSAGE);
+        var providedTime = JOptionPane.showInputDialog(this,
+                "Please provide new time to fast forward to.",
+                "Fast forward", JOptionPane.QUESTION_MESSAGE);
         var time = LocalDateTime.parse(providedTime);
 
         pendingList.forEach(installment -> {
             if (time.compareTo(installment.getTime()) > 0) {
                 var people = personService.getAll();
-                var pendingPeople = people.stream().filter(person -> paidList.stream().noneMatch(payment -> payment.getPerson().getId().equals(person.getId()) && payment.getInstallment().getId().equals(installment.getId()))).collect(Collectors.toList());
-                pendingPeople.forEach(person -> JOptionPane.showMessageDialog(this, "Person: " + person.getFirstName() + " "
-                        + person.getLastName() + " did not pay installment: " + installment.getInstallmentNum() + " (" + installment.getAmount() + "$)."));
+                var pendingPeople = people
+                        .stream()
+                        .filter(person -> paidList
+                                .stream()
+                                .noneMatch(payment ->
+                                        payment.getPerson().getId().equals(person.getId())
+                                                && payment.getInstallment().getId().equals(installment.getId())
+                                                && payment.getAmount() >= installment.getAmount()))
+                        .collect(Collectors.toList());
+                pendingPeople.forEach(person -> {
+                    var partial = paidList
+                            .stream()
+                            .filter(payment ->
+                                    payment.getPerson().getId().equals(person.getId())
+                                            && payment.getInstallment().getId().equals(installment.getId()))
+                            .findAny()
+                            .map(Payment::getAmount)
+                            .orElse(0.0d);
+
+                    JOptionPane.showMessageDialog(this, "Person: "
+                            + person.getFirstName()
+                            + " "
+                            + person.getLastName() + " did not (fully) pay installment: "
+                            + installment.getInstallmentNum()
+                            + " (" + (installment.getAmount() - partial)
+                            + "$).");
+                });
             }
         });
     }
@@ -85,23 +116,39 @@ public class MainFrame extends JFrame {
             pendingSplit.add(new String[]{curr.getEvent().getName(), String.valueOf(curr.getInstallmentNum()),
                     String.valueOf(curr.getTime()), String.valueOf(curr.getAmount())});
         }
-        var pendingTableModel = new DefaultTableModel(pendingSplit.toArray(new String[pendingSplit.size()][]), new String[]{"Event", "Number", "Date", "Amount"});
+        var pendingTableModel = new DefaultTableModel(pendingSplit.toArray(
+                new String[pendingSplit.size()][]),
+                new String[]{"Event", "Number", "Date", "Amount"});
+
         pendingTable.setModel(pendingTableModel);
 
         List<String[]> paidSplit = new ArrayList<>();
         for (Payment curr : payments) {
-            paidSplit.add(new String[]{String.valueOf(curr.getTime()), String.valueOf(curr.getAmount()),
-                    curr.getPerson().getFirstName() + " " + curr.getPerson().getLastName(), curr.getEvent().getName(),
-                    String.valueOf(curr.getInstallment().getInstallmentNum())});
+            paidSplit.add(
+                    new String[]{String.valueOf(curr.getTime()),
+                            String.valueOf(curr.getAmount()),
+                            curr.getPerson().getFirstName() + " " + curr.getPerson().getLastName(),
+                            curr.getEvent().getName(),
+                            String.valueOf(curr.getInstallment().getInstallmentNum())});
         }
 
-        var paidTableModel = new DefaultTableModel(paidSplit.toArray(new String[paidSplit.size()][]), new String[]{"Date", "Amount", "Person", "Event", "Installment"});
+        var paidTableModel = new DefaultTableModel(
+                paidSplit.toArray(new String[paidSplit.size()][]),
+                new String[]{"Date", "Amount", "Person", "Event", "Installment"}
+        );
         paidTable.setModel(paidTableModel);
     }
 
     private void importFromCSVClicked() {
-        var selection = (String) JOptionPane.showInputDialog(this, "What to import?", "Import",
-                JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Person", "Event", "Installment", "Payment"}, "Person");
+        var selection = (String) JOptionPane.showInputDialog(
+                this,
+                "What to import?",
+                "Import",
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new String[]{"Person", "Event", "Installment", "Payment"},
+                "Person");
+
         if (selection == null) return;
         var fileSelector = new JFileChooser();
         fileSelector.setAcceptAllFileFilterUsed(false);
@@ -127,15 +174,30 @@ public class MainFrame extends JFrame {
             default:
                 throw new IllegalStateException("User did not select anything (that should be impossible");
         }
-        JOptionPane.showMessageDialog(this, "Successfully imported!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(
+                this,
+                "Successfully imported!",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Could not import selected file, contents may be invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not import selected file, contents may be invalid.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void addButtonClicked() {
-        var selection = (String) JOptionPane.showInputDialog(this, "What to add?", "Add...",
-                JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Person", "Event", "Installment", "Payment"}, "Person");
+        var selection = (String) JOptionPane.showInputDialog(
+                this,
+                "What to add?",
+                "Add...",
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new String[]{"Person", "Event", "Installment", "Payment"},
+                "Person"
+        );
         if (selection == null) return;
         switch (selection) {
             case "Person":

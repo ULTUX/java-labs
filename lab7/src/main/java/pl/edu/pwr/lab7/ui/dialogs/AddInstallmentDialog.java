@@ -54,7 +54,11 @@ public class AddInstallmentDialog extends JDialog {
         }
         catch (Exception e){
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Could not parse input data", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not parse input data",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

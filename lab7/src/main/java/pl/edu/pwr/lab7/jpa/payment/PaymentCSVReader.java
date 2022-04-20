@@ -12,12 +12,15 @@ import java.util.List;
 
 public class PaymentCSVReader extends CSVReader<Payment> {
 
-    private PersonService personService;
-    private InstallmentService installmentService;
-    private EventService eventService;
+    private final PersonService personService;
+    private final InstallmentService installmentService;
+    private final EventService eventService;
 
-    protected PaymentCSVReader(String fileName) throws FileNotFoundException {
+    protected PaymentCSVReader(String fileName, PersonService personService, InstallmentService installmentService, EventService eventService) throws FileNotFoundException {
         super(fileName);
+        this.personService = personService;
+        this.installmentService = installmentService;
+        this.eventService = eventService;
     }
 
     @Override
