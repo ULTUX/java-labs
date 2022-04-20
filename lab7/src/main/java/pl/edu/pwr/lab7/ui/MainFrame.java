@@ -1,15 +1,11 @@
 package pl.edu.pwr.lab7.ui;
 
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pwr.lab7.event.EventService;
 import pl.edu.pwr.lab7.installment.Installment;
 import pl.edu.pwr.lab7.installment.InstallmentService;
 import pl.edu.pwr.lab7.payment.Payment;
 import pl.edu.pwr.lab7.payment.PaymentService;
-import pl.edu.pwr.lab7.person.PersonCSVReader;
 import pl.edu.pwr.lab7.person.PersonService;
 import pl.edu.pwr.lab7.ui.dialogs.AddEventDialog;
 import pl.edu.pwr.lab7.ui.dialogs.AddInstallmentDialog;
@@ -28,11 +24,11 @@ import java.util.stream.Collectors;
 @Service
 public class MainFrame extends JFrame {
 
-    private final PaymentService paymentService;
+    private final transient PaymentService paymentService;
 
-    private final EventService eventService;
-    private final PersonService personService;
-    private final InstallmentService installmentService;
+    private final transient EventService eventService;
+    private final transient PersonService personService;
+    private final transient InstallmentService installmentService;
 
     private JTable pendingTable;
     private JTable paidTable;
@@ -104,7 +100,7 @@ public class MainFrame extends JFrame {
     }
 
     private void importFromCSVClicked() {
-        var selection = (String) JOptionPane.showInputDialog(this, "What to import?", "Add...",
+        var selection = (String) JOptionPane.showInputDialog(this, "What to import?", "Import",
                 JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Person", "Event", "Installment", "Payment"}, "Person");
         if (selection == null) return;
         var fileSelector = new JFileChooser();
