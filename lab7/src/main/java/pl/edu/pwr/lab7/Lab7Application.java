@@ -9,7 +9,6 @@ import pl.edu.pwr.lab7.event.EventService;
 import pl.edu.pwr.lab7.installment.InstallmentService;
 import pl.edu.pwr.lab7.payment.PaymentService;
 import pl.edu.pwr.lab7.person.PersonService;
-import pl.edu.pwr.lab7.ui.MainFrame;
 
 
 @SpringBootApplication
@@ -24,7 +23,8 @@ public class Lab7Application {
     CommandLineRunner commandLineRunner(EventService eventService, PersonService personService,
                                         InstallmentService installmentService, PaymentService paymentService) {
         return args -> {
-            new MainFrame(paymentService, eventService, personService, installmentService);
+//            Thread.sleep(1000);
+//            new MainFrame(paymentService, eventService, personService, installmentService);
         };
     }
 

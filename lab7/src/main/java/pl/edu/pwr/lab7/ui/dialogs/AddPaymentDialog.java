@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class AddPaymentDialog extends JDialog {
     private final PaymentService paymentService;
@@ -38,6 +39,8 @@ public class AddPaymentDialog extends JDialog {
         this.paymentService = paymentService;
         this.personService = personService;
         this.eventService = eventService;
+
+        paymentTime.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
 
         personSelector.setModel(new DefaultComboBoxModel<>(personService.getAll().toArray(new Person[0])));
         eventSelector.setModel(new DefaultComboBoxModel<>(eventService.getAll().toArray(new Event[0])));
