@@ -1,6 +1,6 @@
-package pl.edu.pwr.lab7.installment;
+package pl.edu.pwr.lab7.jpa.installment;
 
-import pl.edu.pwr.lab7.event.Event;
+import pl.edu.pwr.lab7.jpa.event.Event;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

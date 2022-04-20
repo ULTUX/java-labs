@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.payment;
+package pl.edu.pwr.lab7.jpa.payment;
 
 import org.springframework.stereotype.Service;
 

@@ -1,12 +1,12 @@
 package pl.edu.pwr.lab7.ui;
 
 import org.springframework.stereotype.Service;
-import pl.edu.pwr.lab7.event.EventService;
-import pl.edu.pwr.lab7.installment.Installment;
-import pl.edu.pwr.lab7.installment.InstallmentService;
-import pl.edu.pwr.lab7.payment.Payment;
-import pl.edu.pwr.lab7.payment.PaymentService;
-import pl.edu.pwr.lab7.person.PersonService;
+import pl.edu.pwr.lab7.jpa.event.EventService;
+import pl.edu.pwr.lab7.jpa.installment.Installment;
+import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
+import pl.edu.pwr.lab7.jpa.payment.Payment;
+import pl.edu.pwr.lab7.jpa.payment.PaymentService;
+import pl.edu.pwr.lab7.jpa.person.PersonService;
 import pl.edu.pwr.lab7.ui.dialogs.AddEventDialog;
 import pl.edu.pwr.lab7.ui.dialogs.AddInstallmentDialog;
 import pl.edu.pwr.lab7.ui.dialogs.AddPaymentDialog;

@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.event;
+package pl.edu.pwr.lab7.jpa.event;
 
 import pl.edu.pwr.lab7.CSVReader;
 

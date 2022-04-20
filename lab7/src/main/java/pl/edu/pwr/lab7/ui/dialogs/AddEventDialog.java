@@ -1,7 +1,7 @@
 package pl.edu.pwr.lab7.ui.dialogs;
 
-import pl.edu.pwr.lab7.event.Event;
-import pl.edu.pwr.lab7.event.EventService;
+import pl.edu.pwr.lab7.jpa.event.Event;
+import pl.edu.pwr.lab7.jpa.event.EventService;
 
 import javax.swing.*;
 import java.awt.event.*;

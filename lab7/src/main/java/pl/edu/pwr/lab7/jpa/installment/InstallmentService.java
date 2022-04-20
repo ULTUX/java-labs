@@ -1,7 +1,7 @@
-package pl.edu.pwr.lab7.installment;
+package pl.edu.pwr.lab7.jpa.installment;
 
 import org.springframework.stereotype.Service;
-import pl.edu.pwr.lab7.event.EventService;
+import pl.edu.pwr.lab7.jpa.event.EventService;
 
 import java.io.FileNotFoundException;
 import java.util.List;

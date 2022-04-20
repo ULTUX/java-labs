@@ -1,8 +1,8 @@
-package pl.edu.pwr.lab7.event;
+package pl.edu.pwr.lab7.jpa.payment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Integer> {
+public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 }

@@ -1,7 +1,7 @@
-package pl.edu.pwr.lab7.installment;
+package pl.edu.pwr.lab7.jpa.installment;
 
 import pl.edu.pwr.lab7.CSVReader;
-import pl.edu.pwr.lab7.event.EventService;
+import pl.edu.pwr.lab7.jpa.event.EventService;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;

@@ -1,9 +1,9 @@
-package pl.edu.pwr.lab7.payment;
+package pl.edu.pwr.lab7.jpa.payment;
 
 import pl.edu.pwr.lab7.CSVReader;
-import pl.edu.pwr.lab7.event.EventService;
-import pl.edu.pwr.lab7.installment.InstallmentService;
-import pl.edu.pwr.lab7.person.PersonService;
+import pl.edu.pwr.lab7.jpa.event.EventService;
+import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
+import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;

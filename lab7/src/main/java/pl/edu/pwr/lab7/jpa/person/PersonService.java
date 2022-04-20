@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.person;
+package pl.edu.pwr.lab7.jpa.person;
 
 import org.springframework.stereotype.Service;
 

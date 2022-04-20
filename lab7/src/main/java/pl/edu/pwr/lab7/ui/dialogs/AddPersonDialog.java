@@ -1,7 +1,7 @@
 package pl.edu.pwr.lab7.ui.dialogs;
 
-import pl.edu.pwr.lab7.person.Person;
-import pl.edu.pwr.lab7.person.PersonService;
+import pl.edu.pwr.lab7.jpa.person.Person;
+import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import javax.swing.*;
 import java.awt.event.*;
