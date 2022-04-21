@@ -68,6 +68,7 @@ public class MainFrame extends JFrame {
         var providedTime = JOptionPane.showInputDialog(this,
                 "Please provide new time to fast forward to.",
                 "Fast forward", JOptionPane.QUESTION_MESSAGE);
+        if (providedTime == null) return;
         var time = LocalDateTime.parse(providedTime);
 
         pendingList.forEach(installment -> {
