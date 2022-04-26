@@ -7,7 +7,8 @@ import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class AddInstallmentDialog extends JDialog {
@@ -46,7 +47,7 @@ public class AddInstallmentDialog extends JDialog {
         var installment = new Installment();
         try {
             installment.setInstallmentNum((Integer) installmentNum.getValue());
-            installment.setTime(LocalDateTime.parse(paymentTime.getText()));
+            installment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(paymentTime.getText()));
             installment.setEvent((Event) eventSelector.getSelectedItem());
             installment.setAmount(Double.valueOf(amount.getText()));
             installmentService.addInstallment(installment);

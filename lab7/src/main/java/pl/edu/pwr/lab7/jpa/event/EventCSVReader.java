@@ -3,8 +3,10 @@ package pl.edu.pwr.lab7.jpa.event;
 import pl.edu.pwr.lab7.CSVReader;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EventCSVReader extends CSVReader<Event> {
@@ -24,7 +26,11 @@ public class EventCSVReader extends CSVReader<Event> {
                         event.setId(Integer.valueOf(datum[j]));
                         break;
                     case "time":
-                        event.setTime(LocalDateTime.parse(datum[j]));
+                        try {
+                            event.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datum[j]));
+                        } catch (ParseException e) {
+                            System.out.println("Could not read data");
+                        }
                         break;
                     case "location":
                         event.setLocation(datum[j]);

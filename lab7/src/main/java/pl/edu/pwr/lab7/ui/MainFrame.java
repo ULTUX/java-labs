@@ -15,13 +15,14 @@ import pl.edu.pwr.lab7.ui.dialogs.AddPersonDialog;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import java.time.LocalDateTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 public class MainFrame extends JFrame {
 
     private final transient PaymentService paymentService;
@@ -68,40 +69,48 @@ public class MainFrame extends JFrame {
         var providedTime = JOptionPane.showInputDialog(this,
                 "Please provide new time to fast forward to.",
                 "Fast forward", JOptionPane.QUESTION_MESSAGE);
-        var time = LocalDateTime.parse(providedTime);
-
-        pendingList.forEach(installment -> {
-            if (time.compareTo(installment.getTime()) > 0) {
-                var people = personService.getAll();
-                var pendingPeople = people
-                        .stream()
-                        .filter(person -> paidList
-                                .stream()
-                                .noneMatch(payment ->
-                                        payment.getPerson().getId().equals(person.getId())
-                                                && payment.getInstallment().getId().equals(installment.getId())
-                                                && payment.getAmount() >= installment.getAmount()))
-                        .collect(Collectors.toList());
-                pendingPeople.forEach(person -> {
-                    var partial = paidList
+        try {
+            final Date time = new SimpleDateFormat("dd/MM/yyyy").parse(providedTime);
+            pendingList.forEach(installment -> {
+                if (time.compareTo(installment.getTime()) > 0) {
+                    var people = personService.getAll();
+                    var pendingPeople = people
                             .stream()
-                            .filter(payment ->
-                                    payment.getPerson().getId().equals(person.getId())
-                                            && payment.getInstallment().getId().equals(installment.getId()))
-                            .findAny()
-                            .map(Payment::getAmount)
-                            .orElse(0.0d);
+                            .filter(person -> paidList
+                                    .stream()
+                                    .noneMatch(payment ->
+                                            payment.getPerson().getId().equals(person.getId())
+                                                    && payment.getInstallment().getId().equals(installment.getId())
+                                                    && payment.getAmount() >= installment.getAmount()))
+                            .collect(Collectors.toList());
+                    pendingPeople.forEach(person -> {
+                        var partial = paidList
+                                .stream()
+                                .filter(payment ->
+                                        payment.getPerson().getId().equals(person.getId())
+                                                && payment.getInstallment().getId().equals(installment.getId()))
+                                .findAny()
+                                .map(Payment::getAmount)
+                                .orElse(0.0d);
 
-                    JOptionPane.showMessageDialog(this, "Person: "
-                            + person.getFirstName()
-                            + " "
-                            + person.getLastName() + " did not (fully) pay installment: "
-                            + installment.getInstallmentNum()
-                            + " (" + (installment.getAmount() - partial)
-                            + "$).");
-                });
-            }
-        });
+                        JOptionPane.showMessageDialog(this, "Person: "
+                                + person.getFirstName()
+                                + " "
+                                + person.getLastName() + " did not (fully) pay installment: "
+                                + installment.getInstallmentNum()
+                                + " (" + (installment.getAmount() - partial)
+                                + "$).");
+                    });
+                }
+            });
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not properly parse given date",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private void reloadTables() {

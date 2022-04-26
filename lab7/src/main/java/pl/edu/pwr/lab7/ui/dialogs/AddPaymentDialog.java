@@ -11,8 +11,10 @@ import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class AddPaymentDialog extends JDialog {
     private final transient PaymentService paymentService;
@@ -36,8 +38,8 @@ public class AddPaymentDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         this.paymentService = paymentService;
-
-        paymentTime.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
+        var formatter = new SimpleDateFormat("dd/MM/yyyy");
+        paymentTime.setText(formatter.format(LocalDate.now()));
 
         personSelector.setModel(new DefaultComboBoxModel<>(personService.getAll().toArray(new Person[0])));
         eventSelector.setModel(new DefaultComboBoxModel<>(eventService.getAll().toArray(new Event[0])));
@@ -65,7 +67,7 @@ public class AddPaymentDialog extends JDialog {
         // add your code here
         try {
             var payment = new Payment();
-            payment.setTime(LocalDateTime.parse(paymentTime.getText()));
+            payment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(paymentTime.getText()));
             payment.setEvent((Event) eventSelector.getSelectedItem());
             payment.setInstallment((Installment) installmentSelector.getSelectedItem());
             payment.setAmount(Double.valueOf(amount.getText()));

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.time.LocalDateTime;
 
 public class AppWindow extends JFrame implements ActionListener {
 
@@ -118,7 +117,7 @@ public class AppWindow extends JFrame implements ActionListener {
         }
         if (dirPath != null) {
             Snapshot snap = new Snapshot(dirPath);
-            String fileName = LocalDateTime.now().toString().replace(":", "-") + ".snap";
+            String fileName = Date.now().toString().replace(":", "-") + ".snap";
             try {
                 Snapshot.saveSnapshotToFile(FileSystems.getDefault().getPath(fileName), snap);
                 JOptionPane.showMessageDialog(this, "Successfully created and exported snapshot under the name: " + fileName, "Exported", JOptionPane.INFORMATION_MESSAGE);

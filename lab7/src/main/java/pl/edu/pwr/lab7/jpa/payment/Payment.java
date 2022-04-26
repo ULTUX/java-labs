@@ -5,31 +5,48 @@ import pl.edu.pwr.lab7.jpa.installment.Installment;
 import pl.edu.pwr.lab7.jpa.person.Person;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.xml.bind.annotation.*;
+import java.util.Date;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "payment", namespace = "http://pwr.edu.pwr/soap", propOrder = {
+        "amount",
+        "event",
+        "id",
+        "installment",
+        "person",
+        "time"
+})
 @Entity
 @Table(name = "payment")
 public class Payment {
+    @XmlElement(namespace = "http://pwr.edu.pl/soap")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @XmlElement(namespace = "http://pwr.edu.pl/soap")
+    @XmlSchemaType(name = "dateTime")
     @Column(name = "\"time\"", nullable = false)
-    private LocalDateTime time;
+    private Date time;
 
+    @XmlElement(namespace = "http://pwr.edu.pl/soap")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "installment_id", nullable = false)
     private Installment installment;
 
+    @XmlElement(namespace = "http://pwr.edu.pl/soap")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @XmlElement(namespace = "http://pwr.edu.pl/soap")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
+    @XmlElement(namespace = "http://pwr.edu.pl/soap")
     @Column(name = "amount", nullable = false)
     private Double amount;
 
@@ -65,11 +82,11 @@ public class Payment {
         this.installment = installment;
     }
 
-    public LocalDateTime getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

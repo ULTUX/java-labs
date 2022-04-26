@@ -6,7 +6,9 @@ import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
 import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,11 @@ public class PaymentCSVReader extends CSVReader<Payment> {
                         payment.setInstallment(installment);
                         break;
                     case "time":
-                        payment.setTime(LocalDateTime.parse(datum[j]));
+                        try {
+                            payment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datum[j]));
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
                         break;
                     case "person":
                         var person = personService.getById(Integer.parseInt(datum[j]));

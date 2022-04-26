@@ -4,8 +4,10 @@ import pl.edu.pwr.lab7.CSVReader;
 import pl.edu.pwr.lab7.jpa.event.EventService;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class InstallmentCSVReader extends CSVReader<Installment> {
@@ -35,7 +37,11 @@ public class InstallmentCSVReader extends CSVReader<Installment> {
                         installment.setEvent(event);
                         break;
                     case "time":
-                        installment.setTime(LocalDateTime.parse(datum[j]));
+                        try {
+                            installment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datum[j]));
+                        } catch (ParseException e) {
+                            System.out.println("Data bad formatted");
+                        }
                         break;
                     default:
                         throw new IllegalArgumentException();

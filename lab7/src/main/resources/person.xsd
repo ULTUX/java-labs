@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://pwr.edu.pl/soap"
+           targetNamespace="http://pwr.edu.pl/soap" >
+
+    <xs:element name="getPersonRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPersonResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="person" type="tns:person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="event">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="location" type="xs:string" minOccurs="0"/>
+            <xs:element name="name" type="xs:string" minOccurs="0"/>
+            <xs:element name="time" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="installment">
+        <xs:sequence>
+            <xs:element name="amount" type="xs:double" minOccurs="0"/>
+            <xs:element name="event" type="tns:event" minOccurs="0"/>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="installmentNum" type="xs:int" minOccurs="0"/>
+            <xs:element name="time" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="payment">
+        <xs:sequence>
+            <xs:element name="amount" type="xs:double" minOccurs="0"/>
+            <xs:element name="event" type="tns:event" minOccurs="0"/>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="installment" type="tns:installment" minOccurs="0"/>
+            <xs:element name="person" type="tns:person" minOccurs="0"/>
+            <xs:element name="time" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="person">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string" minOccurs="0"/>
+            <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="lastName" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
