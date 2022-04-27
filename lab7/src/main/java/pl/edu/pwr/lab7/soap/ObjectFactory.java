@@ -6,7 +6,10 @@ import pl.edu.pwr.lab7.jpa.installment.Installment;
 import pl.edu.pwr.lab7.jpa.payment.Payment;
 import pl.edu.pwr.lab7.jpa.person.Person;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
+import javax.xml.namespace.QName;
 
 
 /**
@@ -26,6 +29,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _GetAllPersonRequest_QNAME = new QName("http://pwr.edu.pl/soap", "getAllPersonRequest");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: pl.edu.pwr.lab7.soap
@@ -35,19 +39,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetPersonRequest }
+     * Create an instance of {@link PersonResponse }
      * 
      */
-    public GetPersonRequest createGetPersonRequest() {
-        return new GetPersonRequest();
+    public PersonResponse createGetPersonRequest() {
+        return new PersonResponse();
     }
 
     /**
-     * Create an instance of {@link GetPersonResponse }
+     * Create an instance of {@link PersonRequest }
      * 
      */
-    public GetPersonResponse createGetPersonResponse() {
-        return new GetPersonResponse();
+    public PersonRequest createGetPersonResponse() {
+        return new PersonRequest();
     }
 
     /**
@@ -56,6 +60,14 @@ public class ObjectFactory {
      */
     public Person createPerson() {
         return new Person();
+    }
+
+    /**
+     * Create an instance of {@link AllPersonResponse }
+     * 
+     */
+    public AllPersonResponse createGetAllPersonResponse() {
+        return new AllPersonResponse();
     }
 
     /**
@@ -80,6 +92,19 @@ public class ObjectFactory {
      */
     public Payment createPayment() {
         return new Payment();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Object }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link Object }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://pwr.edu.pl/soap", name = "getAllPersonRequest")
+    public JAXBElement<Object> createGetAllPersonRequest(Object value) {
+        return new JAXBElement<Object>(_GetAllPersonRequest_QNAME, Object.class, null, value);
     }
 
 }

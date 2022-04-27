@@ -75,15 +75,7 @@ public class MainFrame extends JFrame {
             pendingList.forEach(installment -> {
                 if (time.compareTo(installment.getTime()) > 0) {
                     var people = personService.getAll();
-                    var pendingPeople = people
-                            .stream()
-                            .filter(person -> paidList
-                                    .stream()
-                                    .noneMatch(payment ->
-                                            payment.getPerson().getId().equals(person.getId())
-                                                    && payment.getInstallment().getId().equals(installment.getId())
-                                                    && payment.getAmount() >= installment.getAmount()))
-                            .collect(Collectors.toList());
+                    var pendingPeople = personService.getPendingPeople(installment);
                     pendingPeople.forEach(person -> {
                         var partial = paidList
                                 .stream()

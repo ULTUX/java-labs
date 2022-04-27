@@ -22,7 +22,7 @@ public class WsConfig {
         return new ServletRegistrationBean<>(servlet, "/ws/*");
     }
 
-    @Bean(name = "person")
+    @Bean(name = "finances")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema personSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("FinancesPort");
