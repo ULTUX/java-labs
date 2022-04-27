@@ -43,4 +43,8 @@ public class PaymentService {
     public Payment getById(int id) {
         return repository.getById(id);
     }
+
+    public void deleteById(int id) {
+        repository.deleteById(id);
+    }
 }

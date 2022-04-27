@@ -44,4 +44,8 @@ public class PersonService {
             throw new IllegalArgumentException("Provided fileName is not valid or file contents are not consistent.");
         }
     }
+
+    public void deleteById(int id) {
+        repository.deleteById(id);
+    }
 }

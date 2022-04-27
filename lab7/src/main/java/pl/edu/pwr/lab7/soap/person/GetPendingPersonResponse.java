@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.soap;
+package pl.edu.pwr.lab7.soap.person;
 
 import pl.edu.pwr.lab7.jpa.person.Person;
 
@@ -11,7 +11,7 @@ import java.util.List;
         "personList"
 })
 @XmlRootElement(name = "getPendingPeopleResponse", namespace = "http://pwr.edu.pl/soap")
-public class GetPendingPeopleResponse {
+public class GetPendingPersonResponse {
 
     @XmlElement(required = true)
     protected List<Person> personList;

@@ -38,7 +38,7 @@ public class AddPaymentDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         this.paymentService = paymentService;
-        var formatter = new SimpleDateFormat("dd/MM/yyyy");
+        var formatter = new SimpleDateFormat("dd-MM-yyyy");
         paymentTime.setText(formatter.format(LocalDate.now()));
 
         personSelector.setModel(new DefaultComboBoxModel<>(personService.getAll().toArray(new Person[0])));
@@ -67,7 +67,7 @@ public class AddPaymentDialog extends JDialog {
         // add your code here
         try {
             var payment = new Payment();
-            payment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(paymentTime.getText()));
+            payment.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(paymentTime.getText()));
             payment.setEvent((Event) eventSelector.getSelectedItem());
             payment.setInstallment((Installment) installmentSelector.getSelectedItem());
             payment.setAmount(Double.valueOf(amount.getText()));

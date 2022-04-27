@@ -38,7 +38,7 @@ public class InstallmentCSVReader extends CSVReader<Installment> {
                         break;
                     case "time":
                         try {
-                            installment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datum[j]));
+                            installment.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(datum[j]));
                         } catch (ParseException e) {
                             System.out.println("Data bad formatted");
                         }

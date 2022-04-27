@@ -47,7 +47,7 @@ public class AddInstallmentDialog extends JDialog {
         var installment = new Installment();
         try {
             installment.setInstallmentNum((Integer) installmentNum.getValue());
-            installment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(paymentTime.getText()));
+            installment.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(paymentTime.getText()));
             installment.setEvent((Event) eventSelector.getSelectedItem());
             installment.setAmount(Double.valueOf(amount.getText()));
             installmentService.addInstallment(installment);

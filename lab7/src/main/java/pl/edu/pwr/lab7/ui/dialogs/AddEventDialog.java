@@ -46,7 +46,7 @@ public class AddEventDialog extends JDialog {
             var event = new Event();
             event.setName(eventName.getText());
             event.setLocation(location.getText());
-            event.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(time.getText()));
+            event.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(time.getText()));
             eventService.addEvent(event);
         }
         catch (Exception e) {

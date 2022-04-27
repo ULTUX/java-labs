@@ -38,4 +38,7 @@ public class InstallmentService {
         return repository.getById(id);
     }
 
+    public void deleteById(int id) {
+        repository.deleteById(id);
+    }
 }

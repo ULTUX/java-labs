@@ -1,5 +1,5 @@
 
-package pl.edu.pwr.lab7.soap;
+package pl.edu.pwr.lab7.soap.person;
 
 import java.util.ArrayList;
 import java.util.List;

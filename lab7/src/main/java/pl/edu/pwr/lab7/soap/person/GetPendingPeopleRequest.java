@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.soap;
+package pl.edu.pwr.lab7.soap.person;
 
 
 import javax.xml.bind.annotation.*;

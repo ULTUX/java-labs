@@ -1,6 +1,4 @@
-package pl.edu.pwr.lab7.soap;
-
-import pl.edu.pwr.lab7.jpa.person.Person;
+package pl.edu.pwr.lab7.soap.person;
 
 import javax.xml.bind.annotation.*;
 
@@ -11,7 +9,7 @@ import javax.xml.bind.annotation.*;
         "lastName"
 })
 @XmlRootElement(name = "addPersonRequest", namespace = "http://pwr.edu.pl/soap")
-public class AddPersonRequest {
+public class SavePersonRequest {
 
     @XmlElement(required = true)
     protected String firstName;
@@ -19,4 +17,11 @@ public class AddPersonRequest {
     @XmlElement(required = true)
     protected String lastName;
 
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
 }

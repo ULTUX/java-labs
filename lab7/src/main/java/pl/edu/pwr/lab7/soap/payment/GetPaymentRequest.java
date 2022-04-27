@@ -1,4 +1,4 @@
-package pl.edu.pwr.lab7.soap;
+package pl.edu.pwr.lab7.soap.payment;
 
 
 import javax.xml.bind.annotation.*;

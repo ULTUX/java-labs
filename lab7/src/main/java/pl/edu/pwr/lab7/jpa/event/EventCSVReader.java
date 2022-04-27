@@ -27,7 +27,7 @@ public class EventCSVReader extends CSVReader<Event> {
                         break;
                     case "time":
                         try {
-                            event.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datum[j]));
+                            event.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(datum[j]));
                         } catch (ParseException e) {
                             System.out.println("Could not read data");
                         }

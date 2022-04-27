@@ -71,7 +71,7 @@ public class MainFrame extends JFrame {
                 "Please provide new time to fast forward to.",
                 "Fast forward", JOptionPane.QUESTION_MESSAGE);
         try {
-            final Date time = new SimpleDateFormat("dd/MM/yyyy").parse(providedTime);
+            final Date time = new SimpleDateFormat("dd-MM-yyyy").parse(providedTime);
             pendingList.forEach(installment -> {
                 if (time.compareTo(installment.getTime()) > 0) {
                     var pendingPeople = personService.getPendingPeople();

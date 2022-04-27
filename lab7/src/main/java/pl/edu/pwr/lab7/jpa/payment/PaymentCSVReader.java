@@ -45,7 +45,7 @@ public class PaymentCSVReader extends CSVReader<Payment> {
                         break;
                     case "time":
                         try {
-                            payment.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(datum[j]));
+                            payment.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(datum[j]));
                         } catch (ParseException e) {
                             throw new RuntimeException(e);
                         }
