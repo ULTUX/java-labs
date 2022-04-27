@@ -9,31 +9,19 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import pl.edu.pwr.lab7.jpa.event.EventService;
 import pl.edu.pwr.lab7.jpa.installment.Installment;
 import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
-import pl.edu.pwr.lab7.jpa.payment.PaymentService;
-import pl.edu.pwr.lab7.jpa.person.PersonService;
 import pl.edu.pwr.lab7.soap.installment.*;
-import pl.edu.pwr.lab7.soap.payment.GetAllPaymentsRequest;
-import pl.edu.pwr.lab7.soap.payment.GetAllPaymentsResponse;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 @Transactional
 @Endpoint
 public class InstallmentEndpoint {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final PersonService personService;
     private final InstallmentService installmentService;
-    private final PaymentService paymentService;
 
     private final EventService eventService;
 
-    public InstallmentEndpoint(PersonService personService, InstallmentService installmentService, PaymentService paymentService, EventService eventService) {
-        this.personService = personService;
+    public InstallmentEndpoint(InstallmentService installmentService, EventService eventService) {
         this.installmentService = installmentService;
-        this.paymentService = paymentService;
         this.eventService = eventService;
     }
 
@@ -57,7 +45,7 @@ public class InstallmentEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "addInstallmentRequest")
     @ResponsePayload
-    public AddInstallmentResponse get(@RequestPayload AddInstallmentRequest req) {
+    public AddInstallmentResponse add(@RequestPayload AddInstallmentRequest req) {
         var installment = new Installment();
         installment.setInstallmentNum(req.getInstallmentNum());
         installment.setAmount(req.getAmount());

@@ -8,35 +8,25 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
-import pl.edu.pwr.lab7.jpa.payment.PaymentService;
 import pl.edu.pwr.lab7.jpa.person.Person;
 import pl.edu.pwr.lab7.jpa.person.PersonService;
 import pl.edu.pwr.lab7.soap.person.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 @Transactional
 @Endpoint
 public class PersonEndpoint {
 
-    @PersistenceContext
-    private EntityManager entityManager;
     private final PersonService personService;
-    private final InstallmentService installmentService;
-    private final PaymentService paymentService;
 
     @Autowired
-    public PersonEndpoint(PersonService personService, InstallmentService installmentService, PaymentService paymentService) {
+    public PersonEndpoint(PersonService personService) {
         this.personService = personService;
-        this.installmentService = installmentService;
-        this.paymentService = paymentService;
     }
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getPersonRequest")
     @ResponsePayload
-    public GetPersonRequest getPersonById(@RequestPayload GetPersonResponse getPerson) {
+    public GetPersonRequest get(@RequestPayload GetPersonResponse getPerson) {
         var resp = new GetPersonRequest();
         var found = personService.getById(getPerson.getId());
         found = (Person) Hibernate.unproxy(found);
@@ -46,7 +36,7 @@ public class PersonEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getAllPersonRequest")
     @ResponsePayload
-    public GetAllPersonResponse getAllPerson(@RequestPayload GetAllPersonRequest getPerson) {
+    public GetAllPersonResponse getAll(@RequestPayload GetAllPersonRequest getPerson) {
         var resp = new GetAllPersonResponse();
         var found = personService.getAll();
         Hibernate.unproxy(found);
@@ -56,7 +46,7 @@ public class PersonEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getPendingPeopleRequest")
     @ResponsePayload
-    public GetPendingPersonResponse getPendingPerson(@RequestPayload GetPendingPeopleRequest getPerson) {
+    public GetPendingPersonResponse getPending(@RequestPayload GetPendingPeopleRequest getPerson) {
         var pending = personService.getPendingPeople();
         Hibernate.unproxy(pending);
         var resp = new GetPendingPersonResponse();
@@ -66,7 +56,7 @@ public class PersonEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "addPersonRequest")
     @ResponsePayload
-    public SavePersonResponse addPerson(@RequestPayload SavePersonRequest req) {
+    public SavePersonResponse add(@RequestPayload SavePersonRequest req) {
         var person = new Person();
         person.setFirstName(req.getFirstName());
         person.setLastName(req.getLastName());
@@ -76,7 +66,7 @@ public class PersonEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "deletePersonRequest")
     @ResponsePayload
-    public DeletePersonResponse deletePerson(@RequestPayload DeletePersonRequest req) {
+    public DeletePersonResponse delete(@RequestPayload DeletePersonRequest req) {
         var id = req.getId();
         personService.deleteById(id);
         return new DeletePersonResponse();
