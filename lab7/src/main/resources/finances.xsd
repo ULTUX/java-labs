@@ -18,6 +18,18 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="addPersonRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="firstName" type="xs:string"/>
+                <xs:element name="lastName" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addPersonResponse">
+    </xs:element>
+
     <xs:element name="getAllPersonRequest">
     </xs:element>
 
@@ -30,12 +42,47 @@
     </xs:element>
 
     <xs:element name="getPendingPeopleRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
     </xs:element>
 
     <xs:element name="getPendingPeopleResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="personList" type="tns:person" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllPaymentsRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllPaymentsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="paymentList" type="tns:payment" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPaymentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPaymentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="payment" type="tns:payment"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -71,8 +118,8 @@
     </xs:complexType>
     <xs:complexType name="person">
         <xs:sequence>
-            <xs:element name="firstName" type="xs:string" minOccurs="0"/>
             <xs:element name="id" type="xs:int" minOccurs="0"/>
+            <xs:element name="firstName" type="xs:string" minOccurs="0"/>
             <xs:element name="lastName" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>

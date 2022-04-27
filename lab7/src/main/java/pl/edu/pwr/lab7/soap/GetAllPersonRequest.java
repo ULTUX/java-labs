@@ -8,5 +8,5 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "getAllPersonRequest", namespace = "http://pwr.edu.pl/soap")
-public class AllPersonRequest {
+public class GetAllPersonRequest {
 }

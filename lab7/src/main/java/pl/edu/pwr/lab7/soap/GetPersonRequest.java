@@ -1,10 +1,9 @@
 
 package pl.edu.pwr.lab7.soap;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import pl.edu.pwr.lab7.jpa.person.Person;
+
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -17,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
+ *         &lt;element name="person" type="{http://pwr.edu.pl/soap}person"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -28,27 +27,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "person"
 })
 @XmlRootElement(name = "getPersonRequest", namespace = "http://pwr.edu.pl/soap")
-public class PersonResponse {
+public class GetPersonRequest {
 
-    protected int id;
+    @XmlElement(required = true)
+    protected Person person;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the person property.
      * 
+     * @return
+     *     possible object is
+     *     {@link Person }
+     *     
      */
-    public int getId() {
-        return id;
+    public Person getPerson() {
+        return person;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the person property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Person }
+     *     
      */
-    public void setId(int value) {
-        this.id = value;
+    public void setPerson(Person value) {
+        this.person = value;
     }
 
 }

@@ -10,8 +10,8 @@ import java.util.List;
 @XmlType(name = "", propOrder = {
         "personList"
 })
-@XmlRootElement(name = "getPendingPeopleRequest", namespace = "http://pwr.edu.pl/soap")
-public class PendingPeopleResponse {
+@XmlRootElement(name = "getPendingPeopleResponse", namespace = "http://pwr.edu.pl/soap")
+public class GetPendingPeopleResponse {
 
     @XmlElement(required = true)
     protected List<Person> personList;

@@ -40,4 +40,7 @@ public class PaymentService {
         }
     }
 
+    public Payment getById(int id) {
+        return repository.getById(id);
+    }
 }

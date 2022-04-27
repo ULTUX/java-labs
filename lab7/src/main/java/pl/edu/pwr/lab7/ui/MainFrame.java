@@ -74,8 +74,7 @@ public class MainFrame extends JFrame {
             final Date time = new SimpleDateFormat("dd/MM/yyyy").parse(providedTime);
             pendingList.forEach(installment -> {
                 if (time.compareTo(installment.getTime()) > 0) {
-                    var people = personService.getAll();
-                    var pendingPeople = personService.getPendingPeople(installment);
+                    var pendingPeople = personService.getPendingPeople();
                     pendingPeople.forEach(person -> {
                         var partial = paidList
                                 .stream()

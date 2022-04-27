@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.*;
     "personList"
 })
 @XmlRootElement(name = "getAllPersonResponse", namespace = "http://pwr.edu.pl/soap")
-public class AllPersonResponse {
+public class GetAllPersonResponse {
 
     @XmlElement(required = true)
     protected List<Person> personList;

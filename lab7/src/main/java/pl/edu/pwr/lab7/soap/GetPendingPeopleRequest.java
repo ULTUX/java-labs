@@ -6,5 +6,5 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "getPendingPeopleRequest", namespace = "http://pwr.edu.pl/soap")
-public class PendingPeopleRequest {
+public class GetPendingPeopleRequest {
 }
