@@ -30,11 +30,6 @@
     </xs:element>
 
     <xs:element name="getPendingPeopleRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="installmentId" type="xs:int" />
-            </xs:sequence>
-        </xs:complexType>
     </xs:element>
 
     <xs:element name="getPendingPeopleResponse">

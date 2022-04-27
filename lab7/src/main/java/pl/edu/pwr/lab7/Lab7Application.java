@@ -1,9 +1,12 @@
 package pl.edu.pwr.lab7;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.edu.pwr.lab7.jpa.person.PersonRepository;
 
 import javax.swing.*;
 

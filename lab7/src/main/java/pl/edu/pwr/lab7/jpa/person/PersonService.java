@@ -31,16 +31,8 @@ public class PersonService {
         return repository.getById(id);
     }
 
-    public List<Person> getPendingPeople(Installment installment) {
-        return getAll()
-                .stream()
-                .filter(person -> paymentRepository.findAll()
-                        .stream()
-                        .noneMatch(payment ->
-                                payment.getPerson().getId().equals(person.getId())
-                                        && payment.getInstallment().getId().equals(installment.getId())
-                                        && payment.getAmount() >= installment.getAmount()))
-                .collect(Collectors.toList());
+    public List<Person> getPendingPeople() {
+        return repository.getPending();
     }
 
     public void importFromFile(String fileName) {
