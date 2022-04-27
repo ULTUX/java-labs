@@ -21,9 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
-//@Service
+@Service
 public class MainFrame extends JFrame {
 
     private final transient PaymentService paymentService;
