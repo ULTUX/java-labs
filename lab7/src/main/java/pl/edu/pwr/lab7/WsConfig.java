@@ -25,7 +25,7 @@ public class WsConfig {
     @Bean(name = "person")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema personSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("PersonPort");
+        wsdl11Definition.setPortTypeName("FinancesPort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://pwr.edu.pl/soap");
         wsdl11Definition.setSchema(personSchema);
@@ -34,6 +34,6 @@ public class WsConfig {
 
     @Bean
     public XsdSchema personSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("person.xsd"));
+        return new SimpleXsdSchema(new ClassPathResource("finances.xsd"));
     }
 }

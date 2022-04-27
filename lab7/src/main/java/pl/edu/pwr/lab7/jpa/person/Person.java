@@ -7,14 +7,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+@Entity
+@Table(name = "person")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "person", namespace = "http://pwr.edu.pl/soap", propOrder = {
         "firstName",
         "id",
         "lastName"
 })
-@Entity
-@Table(name = "person")
 public class Person {
     @XmlElement(namespace = "http://pwr.edu.pl/soap")
     @Id

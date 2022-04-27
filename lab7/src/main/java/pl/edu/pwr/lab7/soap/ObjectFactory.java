@@ -1,10 +1,13 @@
 
 package pl.edu.pwr.lab7.soap;
 
-
+import pl.edu.pwr.lab7.jpa.event.Event;
+import pl.edu.pwr.lab7.jpa.installment.Installment;
+import pl.edu.pwr.lab7.jpa.payment.Payment;
 import pl.edu.pwr.lab7.jpa.person.Person;
 
 import javax.xml.bind.annotation.XmlRegistry;
+
 
 /**
  * This object contains factory methods for each 
@@ -32,19 +35,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetPerson }
+     * Create an instance of {@link GetPersonRequest }
      * 
      */
-    public GetPerson createGetPerson() {
-        return new GetPerson();
+    public GetPersonRequest createGetPersonRequest() {
+        return new GetPersonRequest();
     }
 
     /**
-     * Create an instance of {@link GetResponse }
+     * Create an instance of {@link GetPersonResponse }
      * 
      */
-    public GetResponse createGetResponse() {
-        return new GetResponse();
+    public GetPersonResponse createGetPersonResponse() {
+        return new GetPersonResponse();
     }
 
     /**
@@ -53,6 +56,30 @@ public class ObjectFactory {
      */
     public Person createPerson() {
         return new Person();
+    }
+
+    /**
+     * Create an instance of {@link Event }
+     * 
+     */
+    public Event createEvent() {
+        return new Event();
+    }
+
+    /**
+     * Create an instance of {@link Installment }
+     * 
+     */
+    public Installment createInstallment() {
+        return new Installment();
+    }
+
+    /**
+     * Create an instance of {@link Payment }
+     * 
+     */
+    public Payment createPayment() {
+        return new Payment();
     }
 
 }
