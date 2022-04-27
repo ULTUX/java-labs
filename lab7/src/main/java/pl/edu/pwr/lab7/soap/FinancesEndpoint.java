@@ -52,7 +52,7 @@ public class FinancesEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getPendingPeopleRequest")
     @ResponsePayload
-    public PendingPeopleResponse getAllPerson(@RequestPayload PendingPeopleRequest getPerson) {
+    public PendingPeopleResponse getPendingPeople(@RequestPayload PendingPeopleRequest getPerson) {
         var installment = installmentService.getById(getPerson.getInstallmentId());
         var pendingPeople = personService.getPendingPeople(installment);
         Hibernate.unproxy(pendingPeople);
