@@ -10,11 +10,12 @@ import pl.edu.pwr.lab7.jpa.person.Person;
 import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class AddPaymentDialog extends JDialog {
     private final transient PaymentService paymentService;
