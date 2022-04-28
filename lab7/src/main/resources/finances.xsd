@@ -41,14 +41,14 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="getPendingPersonResponse">
+    <xs:element name="getPendingPersonRequest">
         <xs:complexType>
             <xs:sequence>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="getPendingPersonRequest">
+    <xs:element name="getPendingPersonResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="personList" type="tns:person" maxOccurs="unbounded"/>

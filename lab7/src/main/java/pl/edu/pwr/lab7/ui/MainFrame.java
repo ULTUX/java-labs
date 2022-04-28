@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MainFrame extends JFrame {
@@ -47,7 +48,7 @@ public class MainFrame extends JFrame {
             PersonService personService,
             InstallmentService installmentService
     ) {
-        super("Statistic analysis tool");
+        super("School finances");
         this.setContentPane(this.mainPanel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -71,9 +72,19 @@ public class MainFrame extends JFrame {
                 "Fast forward", JOptionPane.QUESTION_MESSAGE);
         try {
             final Date time = new SimpleDateFormat("dd-MM-yyyy").parse(providedTime);
+
             pendingList.forEach(installment -> {
                 if (time.compareTo(installment.getTime()) > 0) {
-                    var pendingPeople = personService.getPendingPeople();
+                    var people = personService.getAll();
+                    var pendingPeople = people
+                            .stream()
+                            .filter(person -> paidList
+                                    .stream()
+                                    .noneMatch(payment ->
+                                            payment.getPerson().getId().equals(person.getId())
+                                                    && payment.getInstallment().getId().equals(installment.getId())
+                                                    && payment.getAmount() >= installment.getAmount()))
+                            .collect(Collectors.toList());
                     pendingPeople.forEach(person -> {
                         var partial = paidList
                                 .stream()

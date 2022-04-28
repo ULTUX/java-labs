@@ -26,8 +26,8 @@ public class PersonEndpoint {
 
     @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getPersonRequest")
     @ResponsePayload
-    public GetPersonRequest get(@RequestPayload GetPersonResponse getPerson) {
-        var resp = new GetPersonRequest();
+    public GetPersonResponse get(@RequestPayload GetPersonRequest getPerson) {
+        var resp = new GetPersonResponse();
         var found = personService.getById(getPerson.getId());
         found = (Person) Hibernate.unproxy(found);
         resp.setPerson(found);
@@ -44,13 +44,13 @@ public class PersonEndpoint {
         return resp;
     }
 
-    @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getPendingPeopleRequest")
+    @PayloadRoot(namespace = "http://pwr.edu.pl/soap", localPart = "getPendingPersonRequest")
     @ResponsePayload
     public GetPendingPersonResponse getPending(@RequestPayload GetPendingPeopleRequest getPerson) {
         var pending = personService.getPendingPeople();
         Hibernate.unproxy(pending);
         var resp = new GetPendingPersonResponse();
-        resp.getPersonist().addAll(pending);
+        resp.getPersonList().addAll(pending);
         return resp;
     }
 

@@ -1,6 +1,8 @@
 
 package pl.edu.pwr.lab7.soap.person;
 
+import pl.edu.pwr.lab7.jpa.person.Person;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,27 +30,18 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "id"
+    "person"
 })
 @XmlRootElement(name = "getPersonResponse", namespace = "http://pwr.edu.pl/soap")
 public class GetPersonResponse {
 
-    protected int id;
+    protected Person person;
 
-    /**
-     * Gets the value of the id property.
-     * 
-     */
-    public int getId() {
-        return id;
+    public Person getPerson() {
+        return person;
     }
 
-    /**
-     * Sets the value of the id property.
-     * 
-     */
-    public void setId(int value) {
-        this.id = value;
+    public void setPerson(Person person) {
+        this.person = person;
     }
-
 }

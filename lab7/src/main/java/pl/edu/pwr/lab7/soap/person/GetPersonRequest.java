@@ -27,36 +27,19 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "person"
+    "id"
 })
 @XmlRootElement(name = "getPersonRequest", namespace = "http://pwr.edu.pl/soap")
 public class GetPersonRequest {
 
     @XmlElement(required = true)
-    protected Person person;
+    protected int id;
 
-    /**
-     * Gets the value of the person property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Person }
-     *     
-     */
-    public Person getPerson() {
-        return person;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    /**
-     * Sets the value of the person property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Person }
-     *     
-     */
-    public void setPerson(Person value) {
-        this.person = value;
+    public int getId() {
+        return id;
     }
-
 }

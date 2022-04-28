@@ -10,13 +10,13 @@ import java.util.List;
 @XmlType(name = "", propOrder = {
         "personList"
 })
-@XmlRootElement(name = "getPendingPeopleResponse", namespace = "http://pwr.edu.pl/soap")
+@XmlRootElement(name = "getPendingPersonResponse", namespace = "http://pwr.edu.pl/soap")
 public class GetPendingPersonResponse {
 
     @XmlElement(required = true)
     protected List<Person> personList;
 
-    public List<Person> getPersonist() {
+    public List<Person> getPersonList() {
         if (personList == null) personList = new ArrayList<>();
         return personList;
     }
