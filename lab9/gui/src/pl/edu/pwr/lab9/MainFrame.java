@@ -1,7 +1,5 @@
 package pl.edu.pwr.lab9;
 
-import pl.edu.pwr.lab9.lib.FileEncrypterDecrypter;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -24,6 +22,7 @@ public class MainFrame extends JFrame {
     private JButton selectKeyStoreButton;
     private JPasswordField passwordField1;
     private JButton loadKeyStoreButton;
+    private JLabel privateKeyLabel;
 
     private KeyStore keyStore;
 
@@ -43,7 +42,22 @@ public class MainFrame extends JFrame {
         algorithmSelector.setModel(algSelectModel);
         algSelectModel.addElement("RSA");
         algSelectModel.addElement("AES");
+        algorithmSelector.addActionListener(e -> handleSelectionChange());
 
+    }
+
+    private void handleSelectionChange() {
+        if (algorithmSelector.getSelectedItem() == null) return;
+        switch ((String) algorithmSelector.getSelectedItem()) {
+            case "AES":
+                publicKeySelector.setEnabled(false);
+                privateKeyLabel.setText("Secret key");
+                break;
+            case "RSA":
+                publicKeySelector.setEnabled(true);
+                privateKeyLabel.setText("Private key");
+                break;
+        }
     }
 
     private void selectFile() {
