@@ -1,0 +1,8 @@
+keystore "keystore";
+
+
+grant {
+    permission java.security.FilePermission "*", "read, write";
+    permission java.util.PropertyPermission "user.dir", "read, write";
+    permission java.lang.RuntimePermission;
+};
