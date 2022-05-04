@@ -217,8 +217,7 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        var policyPath = Paths.get("./lab9/gui/java.policy");
-        System.setProperty("java.security.policy", policyPath.toAbsolutePath().toString());
+        System.setProperty("java.security.policy", "java.policy");
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
