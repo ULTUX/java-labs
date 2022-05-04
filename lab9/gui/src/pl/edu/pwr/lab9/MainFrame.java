@@ -1,5 +1,10 @@
 package pl.edu.pwr.lab9;
 
+import pl.edu.pwr.lab9.lib.FileEncrypterDecrypter;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -43,8 +48,97 @@ public class MainFrame extends JFrame {
         algSelectModel.addElement("RSA");
         algSelectModel.addElement("AES");
         algorithmSelector.addActionListener(e -> handleSelectionChange());
+        encryptButton.addActionListener(e -> handleEncryptBtnClicked());
+        decryptButton.addActionListener(e -> handleDecryptBtnClicked());
 
     }
+
+    private void handleDecryptBtnClicked() {
+        if (algorithmSelector.getSelectedItem() == null) return;
+        switch ((String) algorithmSelector.getSelectedItem()) {
+            case "RSA":
+                var privKey = getPrivateKey();
+                if (privKey == null) return;
+                try {
+                    new FileEncrypterDecrypter().rsaDecrypt(inputFileField.getText(), (PrivateKey) privKey);
+                } catch (NoSuchPaddingException | IllegalBlockSizeException | IOException | NoSuchAlgorithmException |
+                         BadPaddingException | InvalidKeyException | ClassCastException e) {
+                    JOptionPane.showMessageDialog(this, "Could not RSA decrypt selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+                break;
+            case "AES":
+                var secret = getPrivateKey();
+                if (secret == null) return;
+                try {
+                    new FileEncrypterDecrypter().aesDecrypt(inputFileField.getText(), secret);
+                } catch (NoSuchPaddingException | IllegalBlockSizeException | IOException | NoSuchAlgorithmException |
+                         BadPaddingException | InvalidKeyException e) {
+                    JOptionPane.showMessageDialog(this, "Could not AES decrypt selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "No accepted algorithm selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+        }
+
+    }
+
+    private void handleEncryptBtnClicked() {
+        if (algorithmSelector.getSelectedItem() ==  null) return;
+        switch ((String) algorithmSelector.getSelectedItem()) {
+            case "RSA":
+                var publicKey = getPublicKey();
+                if (publicKey == null) return;
+                try {
+                    new FileEncrypterDecrypter().rsaEncrypt(inputFileField.getText(), publicKey);
+                } catch (NoSuchPaddingException | NoSuchAlgorithmException | IOException | InvalidKeyException |
+                         IllegalBlockSizeException | BadPaddingException e) {
+                    JOptionPane.showMessageDialog(this, "Could not RSA encrypt selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+                break;
+            case "AES":
+                var secret = getPrivateKey();
+                try {
+                    new FileEncrypterDecrypter().aesEncrypt(inputFileField.getText(), secret);
+                } catch (NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | IOException |
+                         BadPaddingException | InvalidKeyException e) {
+                    JOptionPane.showMessageDialog(this, "Could not AES encrypt selected file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "No accepted algorithm selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+        }
+
+    }
+
+    private Key getPrivateKey() {
+        var passwordDialog = new PasswordDialog("Please provide password for key "+privateKeySelector.getSelectedItem()+".");
+        passwordDialog.pack();
+        passwordDialog.setVisible(true);
+        var password = passwordDialog.getPassword();
+        if (password == null) return null;
+        try {
+            return keyStore.getKey((String) privateKeySelector.getSelectedItem(), password);
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+            JOptionPane.showMessageDialog(this, "Could not open selected key.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
+    private PublicKey getPublicKey() {
+        try {
+            return keyStore.getCertificate((String) publicKeySelector.getSelectedItem()).getPublicKey();
+        } catch (KeyStoreException e) {
+            JOptionPane.showMessageDialog(this, "Could not open selected key.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
 
     private void handleSelectionChange() {
         if (algorithmSelector.getSelectedItem() == null) return;
@@ -68,6 +162,8 @@ public class MainFrame extends JFrame {
         if (res == JFileChooser.APPROVE_OPTION) {
             var file = fileChooser.getSelectedFile();
             inputFileField.setText(file.toString());
+            encryptButton.setEnabled(true);
+            decryptButton.setEnabled(true);
         }
 
     }
@@ -108,6 +204,10 @@ public class MainFrame extends JFrame {
                     throw new RuntimeException(e);
                 }
             });
+            inputButton.setEnabled(true);
+            privateKeySelector.setEnabled(true);
+            publicKeySelector.setEnabled(true);
+            algorithmSelector.setEnabled(true);
 
 
         } catch (IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
