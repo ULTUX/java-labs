@@ -218,10 +218,9 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        System.setProperty("java.security.policy", "java.policy");
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
-        }
+//        if (System.getSecurityManager() == null) {
+//            System.setSecurityManager(new SecurityManager());
+//        }
         new MainFrame();
     }
 
