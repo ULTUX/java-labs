@@ -4,6 +4,8 @@ import pl.edu.pwr.lab7.jpa.event.Event;
 import pl.edu.pwr.lab7.jpa.event.EventService;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,8 +50,7 @@ public class AddEventDialog extends JDialog {
             event.setLocation(location.getText());
             event.setTime(new SimpleDateFormat("dd-MM-yyyy").parse(time.getText()));
             eventService.addEvent(event);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
                     "Could not parse input data",

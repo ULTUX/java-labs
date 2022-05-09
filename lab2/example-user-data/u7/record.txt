@@ -1,3 +1,0 @@
-FirstName Donald
-LastName Regan
-Age 31

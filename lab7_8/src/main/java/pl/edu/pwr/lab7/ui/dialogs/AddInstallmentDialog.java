@@ -6,6 +6,7 @@ import pl.edu.pwr.lab7.jpa.installment.Installment;
 import pl.edu.pwr.lab7.jpa.installment.InstallmentService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -52,8 +53,7 @@ public class AddInstallmentDialog extends JDialog {
             installment.setAmount(Double.valueOf(amount.getText()));
             installmentService.addInstallment(installment);
             dispose();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(
                     this,

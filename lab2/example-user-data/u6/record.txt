@@ -1,3 +1,0 @@
-FirstName John
-LastName Smith
-Age 21

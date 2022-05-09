@@ -4,6 +4,8 @@ import pl.edu.pwr.lab7.jpa.person.Person;
 import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.*;
 
 public class AddPersonDialog extends JDialog {
@@ -45,8 +47,7 @@ public class AddPersonDialog extends JDialog {
             person.setFirstName(fName.getText());
             person.setLastName(lName.getText());
             personService.addPerson(person);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
                     "Could not parse input data",

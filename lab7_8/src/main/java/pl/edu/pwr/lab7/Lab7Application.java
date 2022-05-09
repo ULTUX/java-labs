@@ -14,8 +14,8 @@ import javax.swing.*;
 @SpringBootApplication
 @Configuration
 public class Lab7Application {
-
     public static void main(String[] args) {
+
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (UnsupportedLookAndFeelException e) {

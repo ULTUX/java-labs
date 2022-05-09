@@ -10,6 +10,8 @@ import pl.edu.pwr.lab7.jpa.person.Person;
 import pl.edu.pwr.lab7.jpa.person.PersonService;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -88,4 +90,5 @@ public class AddPaymentDialog extends JDialog {
         // add your code here if necessary
         dispose();
     }
+
 }

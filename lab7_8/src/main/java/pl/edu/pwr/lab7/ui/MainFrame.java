@@ -13,8 +13,10 @@ import pl.edu.pwr.lab7.ui.dialogs.AddPaymentDialog;
 import pl.edu.pwr.lab7.ui.dialogs.AddPersonDialog;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -169,27 +171,27 @@ public class MainFrame extends JFrame {
         if (file != JFileChooser.APPROVE_OPTION) return;
         var filePath = fileSelector.getSelectedFile().toPath().toAbsolutePath().toString();
         try {
-        switch (selection) {
-            case "Person":
-                personService.importFromFile(filePath);
-                break;
-            case "Event":
-                eventService.importFromFile(filePath);
-                break;
-            case "Installment":
-                installmentService.importFromFile(filePath);
-                break;
-            case "Payment":
-                paymentService.importFromFile(filePath);
-                break;
-            default:
-                throw new IllegalStateException("User did not select anything (that should be impossible");
-        }
-        JOptionPane.showMessageDialog(
-                this,
-                "Successfully imported!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+            switch (selection) {
+                case "Person":
+                    personService.importFromFile(filePath);
+                    break;
+                case "Event":
+                    eventService.importFromFile(filePath);
+                    break;
+                case "Installment":
+                    installmentService.importFromFile(filePath);
+                    break;
+                case "Payment":
+                    paymentService.importFromFile(filePath);
+                    break;
+                default:
+                    throw new IllegalStateException("User did not select anything (that should be impossible");
+            }
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Successfully imported!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                     this,
@@ -236,4 +238,5 @@ public class MainFrame extends JFrame {
         }
         reloadTables();
     }
+
 }

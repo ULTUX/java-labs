@@ -6,6 +6,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -87,7 +88,7 @@ public class MainFrame extends JFrame {
     }
 
     private void handleEncryptBtnClicked() {
-        if (algorithmSelector.getSelectedItem() ==  null) return;
+        if (algorithmSelector.getSelectedItem() == null) return;
         switch ((String) algorithmSelector.getSelectedItem()) {
             case "RSA":
                 var publicKey = getPublicKey();
@@ -118,7 +119,7 @@ public class MainFrame extends JFrame {
     }
 
     private Key getPrivateKey() {
-        var passwordDialog = new PasswordDialog("Please provide password for key "+privateKeySelector.getSelectedItem()+".");
+        var passwordDialog = new PasswordDialog("Please provide password for key " + privateKeySelector.getSelectedItem() + ".");
         passwordDialog.pack();
         passwordDialog.setVisible(true);
         var password = passwordDialog.getPassword();
@@ -198,9 +199,9 @@ public class MainFrame extends JFrame {
                 Certificate cert = null;
                 try {
                     cert = keyStore.getCertificate(s);
-                if (cert != null) {
-                    pubKeyModel.addElement(s);
-                }
+                    if (cert != null) {
+                        pubKeyModel.addElement(s);
+                    }
                 } catch (KeyStoreException e) {
                     throw new RuntimeException(e);
                 }
@@ -223,4 +224,5 @@ public class MainFrame extends JFrame {
         }
         new MainFrame();
     }
+
 }

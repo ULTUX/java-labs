@@ -1,6 +1,8 @@
 package pl.edu.pwr.lab9;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.*;
 
 public class PasswordDialog extends JDialog {
