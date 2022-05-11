@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: pl.edu.pwr.lab9.MainFrame
+Multi-Release: true
+Class-Path: ./Multi-Release-Enc-Dec_Lib.jar
+
