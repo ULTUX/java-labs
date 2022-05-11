@@ -9,7 +9,7 @@ W drugiej części zajęć należało wygenerować instalator stworzonej aplikac
 W celu stworzenia wielowydaniowego jar'a, stworzone zostały osobne projekty dla każdej wersji javy (11 oraz 9), a standardowa wersja projektu została zmieniona na jave 8.
 Po wykonaniu tego kroku struktura plików w całym projekcie prezentowała się tak jak poniżej
 
-![[assets/struct.png]]
+![assets/struct.png]()
 
 Następnym krokiem było usunięcie wszelkich błędów, które wystąpiły po zmianie wersji bazowej danego projektu.
 Aby ułatwić sobie debuggowanie każdego z projektów dodane zostały także println'y, mówiące z której wersji javy dana klasa pochodzi.
@@ -22,7 +22,7 @@ Następnie należało odpowiednio skompilować każy z projektów. W tym celu dl
 Projekty bazowe (gui-multi-release oraz lib-multi-release) zostały skompilowane do odpowiadających im folderów, natomiast projekty wersji do folderów ``<root>/META-INF/version/<version>``, gdzie root jest folderem projektu bazowego, a version wersją kompilowanego projektu. 
 Poniżej znajduje sie przykładowa struktura skompilowanych plików na przykładzie dla gui
 
-![[assets/out.png]]
+![assets/out.png]()
 Ostanim krokiem pozostało stworzenie finalnych plików *.jar*:
 Aby to zrobić należało najpierw stworzyć pliki *MANIFEST.MF*:
 
