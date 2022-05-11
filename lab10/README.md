@@ -23,7 +23,8 @@ Projekty bazowe (gui-multi-release oraz lib-multi-release) zostały skompilowane
 Poniżej znajduje sie przykładowa struktura skompilowanych plików na przykładzie dla gui
 
 ![](assets/out.png)
-Ostanim krokiem pozostało stworzenie finalnych plików *.jar*:
+
+Ostatnim krokiem pozostało stworzenie finalnych plików *.jar*:
 Aby to zrobić należało najpierw stworzyć pliki *MANIFEST.MF*:
 
 ```
