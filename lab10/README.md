@@ -7,7 +7,7 @@ W drugiej części zajęć należało wygenerować instalator stworzonej aplikac
 
 ### Wielowydaniowy jar
 W celu stworzenia wielowydaniowego jar'a, stworzone zostały osobne projekty dla każdej wersji javy (11 oraz 9), a standardowa wersja projektu została zmieniona na jave 8.
-Po wykonaniu tego kroku struktura plików w całym projekcie prezentowała się tak jak poniżej
+Po wykonaniu tego kroku struktura plików w całym projekcie prezentowała się tak jak poniżej.
 
 ![](assets/struct.png)
 
