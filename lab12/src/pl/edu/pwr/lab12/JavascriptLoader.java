@@ -33,9 +33,4 @@ public class JavascriptLoader {
         var res = (ScriptObjectMirror) invocable.invokeFunction("nextGeneration", (Object) state);
         return parseToArray(res);
     }
-
-    public static void main(String[] args) throws ScriptException, FileNotFoundException, NoSuchMethodException {
-        var loader = new JavascriptLoader("game.js");
-        loader.nextGeneration(new int[10][10]);
-    }
 }

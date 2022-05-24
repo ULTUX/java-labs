@@ -16,26 +16,26 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         super();
         System.out.println(resolution);
         this.resolution = resolution;
-        setBackground(Color.MAGENTA);
         addMouseListener(this);
         addMouseMotionListener(this);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         var graphics = (Graphics2D) g;
         if (data == null) return;
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[i].length; j++) {
                 var rectPos = translatePos(new Dimension(i, j));
                 if (data[i][j] == 0) {
-                    graphics.setColor(Color.WHITE);
+                    graphics.setColor(new Color(1, 1, 1, 1));
                     graphics.fillRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
                 }
                 else {
-                    graphics.setColor(Color.BLACK);
-                    graphics.fillRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
                     graphics.setColor(Color.WHITE);
+                    graphics.fillRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
+                    graphics.setColor(Color.BLACK);
                     graphics.drawRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
                 }
             }
@@ -97,6 +97,7 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
     @Override
     public void mousePressed(MouseEvent e) {
         var index = translateBackPos(new Dimension(e.getX(), e.getY()));
+        if (index.width < 0 || index.width >= data.length || index.height < 0 || index.height >= data[0].length) return;
         mouseMode = data[index.width][index.height] != 0;
     }
 

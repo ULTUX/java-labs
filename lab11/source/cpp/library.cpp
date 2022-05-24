@@ -18,7 +18,7 @@ vector<double> *getDoubleArray(bool &order) {
     label lab{fm, "Data list (separated by space)"};
     lab.format(true);
 
-    textbox textbox{fm, "asd"};
+    textbox textbox{fm, ""};
     checkbox checkbox{fm, "Sort descending"};
 
     button btn{fm, "Ok"};
@@ -76,6 +76,7 @@ JNIEXPORT jobjectArray JNICALL Java_pl_edu_pwr_lab11_Sorting_sort01
         auto doubleObject = env->NewObject(doubleClass, doubleConstructor, element);
         env->SetObjectArrayElement(array, i, doubleObject);
     }
+    delete newTab;
 
     return array;
 }
