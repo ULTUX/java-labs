@@ -8,10 +8,14 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.script.ScriptException;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.nio.file.FileSystems;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.stream.Stream;
 
 public class MainFrame extends JFrame {
@@ -24,6 +28,9 @@ public class MainFrame extends JFrame {
     private JPanel mainPanel;
     private JSpinner simulationSpeed;
     private JButton clearCanvasButton;
+    private JButton unloadScriptButton;
+    private JButton importFromFileButton;
+    private JButton exportToFileButton;
 
     private final Canvas canvas;
 
@@ -57,6 +64,9 @@ public class MainFrame extends JFrame {
         stopButton.addActionListener(e -> handleStop());
         reloadFilesButton.addActionListener(e -> findJsFiles());
         clearCanvasButton.addActionListener(e -> canvas.clearCanvas());
+        unloadScriptButton.addActionListener(e -> handleUnloadScript());
+        exportToFileButton.addActionListener(e -> handleExport());
+        importFromFileButton.addActionListener(e -> handleImport());
 
         findJsFiles();
         var size = canvas.getDataSize();
@@ -64,6 +74,45 @@ public class MainFrame extends JFrame {
         canvas.setData(data);
 
 
+    }
+
+    private void handleImport() {
+        var fileChooser = new JFileChooser(System.getProperty("user.dir"));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Cellular automata snapshot", "cas"));
+        var res = fileChooser.showOpenDialog(this);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            var file = fileChooser.getSelectedFile();
+            try {
+                var fileIn = new ObjectInputStream(new FileInputStream(file));
+                var data = (int[][]) fileIn.readObject();
+                canvas.setData(data);
+            } catch (IOException | ClassNotFoundException e) {
+                JOptionPane.showMessageDialog(this, "Could not load file, it may be corrupted", "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void handleExport() {
+        var data = canvas.getData();
+        try {
+            var fileName = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace(":","_").replace("+", "_");
+            var fileOut = new ObjectOutputStream(new FileOutputStream(fileName + ".cas"));
+            fileOut.writeObject(data);
+            JOptionPane.showMessageDialog(this, "Succesfully exported snapshot to file: " + fileName, "Export", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Could not save the file.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void handleUnloadScript() {
+        if (isSimRunning) return;
+        this.loader = null;
+        unloadScriptButton.setEnabled(false);
+        System.gc();
     }
 
     private void handleSelectionChanged() {
@@ -89,6 +138,7 @@ public class MainFrame extends JFrame {
         startButton.setEnabled(false);
         stopButton.setEnabled(true);
         scriptSelector.setEnabled(false);
+        unloadScriptButton.setEnabled(false);
     }
 
     private void handleStop() {
@@ -96,6 +146,7 @@ public class MainFrame extends JFrame {
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
         scriptSelector.setEnabled(true);
+        unloadScriptButton.setEnabled(true);
     }
 
     private void startSimulation() {
@@ -150,43 +201,46 @@ public class MainFrame extends JFrame {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(3, 6, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(4, 6, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        startButton = new JButton();
-        startButton.setEnabled(false);
-        startButton.setText("Start");
-        mainPanel.add(startButton, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         canvasContainer = new JPanel();
         canvasContainer.setLayout(new CardLayout(0, 0));
         canvasContainer.setEnabled(true);
         mainPanel.add(canvasContainer, new GridConstraints(0, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         scriptSelector = new JComboBox();
-        mainPanel.add(scriptSelector, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(scriptSelector, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("Load JS file");
         mainPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setText("Simulation speed (ms)");
+        mainPanel.add(label2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        simulationSpeed = new JSpinner();
+        mainPanel.add(simulationSpeed, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        unloadScriptButton = new JButton();
+        unloadScriptButton.setEnabled(false);
+        unloadScriptButton.setText("Unload Script");
+        mainPanel.add(unloadScriptButton, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         reloadFilesButton = new JButton();
         reloadFilesButton.setText("Reload files");
-        mainPanel.add(reloadFilesButton, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(reloadFilesButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         stopButton = new JButton();
         stopButton.setEnabled(false);
         stopButton.setText("Stop");
         mainPanel.add(stopButton, new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.add(panel1, new GridConstraints(1, 2, 2, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
-        label2.setText("Simulation speed (ms)");
-        panel1.add(label2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        panel1.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        simulationSpeed = new JSpinner();
-        panel1.add(simulationSpeed, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         clearCanvasButton = new JButton();
         clearCanvasButton.setText("Clear canvas");
-        panel1.add(clearCanvasButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(clearCanvasButton, new GridConstraints(3, 4, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        exportToFileButton = new JButton();
+        exportToFileButton.setText("Export to file");
+        mainPanel.add(exportToFileButton, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        importFromFileButton = new JButton();
+        importFromFileButton.setText("Import from file");
+        mainPanel.add(importFromFileButton, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        startButton = new JButton();
+        startButton.setEnabled(false);
+        startButton.setText("Start");
+        mainPanel.add(startButton, new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         label2.setLabelFor(simulationSpeed);
     }
 
