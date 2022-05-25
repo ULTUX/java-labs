@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
     private JPanel canvasContainer;
     private JPanel mainPanel;
     private JSpinner simulationSpeed;
+    private JButton clearCanvasButton;
 
     private final Canvas canvas;
 
@@ -55,6 +56,7 @@ public class MainFrame extends JFrame {
         startButton.addActionListener(e -> handleStart());
         stopButton.addActionListener(e -> handleStop());
         reloadFilesButton.addActionListener(e -> findJsFiles());
+        clearCanvasButton.addActionListener(e -> canvas.clearCanvas());
 
         findJsFiles();
         var size = canvas.getDataSize();
@@ -103,19 +105,19 @@ public class MainFrame extends JFrame {
             loader = new JavascriptLoader((String) selectedItem);
             new Thread(() -> {
                 while (isSimRunning) {
-                    var currGeneration = canvas.getData();
-                    int[][] nextGen;
                     try {
+                        var currGeneration = canvas.getData();
+                        int[][] nextGen;
                         nextGen = loader.nextGeneration(currGeneration);
                         canvas.setData(nextGen);
-                    } catch (ScriptException | NoSuchMethodException e) {
-                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Could not continue simulation, error unknown", "Error", JOptionPane.ERROR_MESSAGE));
-
-                    }
-                    try {
                         Thread.sleep(Integer.toUnsignedLong((Integer) simulationSpeed.getValue()));
                     } catch (InterruptedException ignored) {
                         Thread.currentThread().interrupt();
+                        return;
+                    } catch (ScriptException | NoSuchMethodException e) {
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Could not continue simulation, error unknown", "Error", JOptionPane.ERROR_MESSAGE));
+                        Thread.currentThread().interrupt();
+
                     }
                 }
                 System.out.println("Simulation thead finished");
@@ -156,7 +158,6 @@ public class MainFrame extends JFrame {
         mainPanel.add(startButton, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         canvasContainer = new JPanel();
         canvasContainer.setLayout(new CardLayout(0, 0));
-        canvasContainer.setBackground(new Color(-14605013));
         canvasContainer.setEnabled(true);
         mainPanel.add(canvasContainer, new GridConstraints(0, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         scriptSelector = new JComboBox();
@@ -183,6 +184,9 @@ public class MainFrame extends JFrame {
         panel1.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         simulationSpeed = new JSpinner();
         panel1.add(simulationSpeed, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        clearCanvasButton = new JButton();
+        clearCanvasButton.setText("Clear canvas");
+        panel1.add(clearCanvasButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         label2.setLabelFor(simulationSpeed);
     }
 
@@ -192,4 +196,5 @@ public class MainFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
+
 }

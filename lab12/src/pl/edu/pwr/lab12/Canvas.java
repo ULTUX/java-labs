@@ -12,6 +12,10 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 
     private boolean mouseMode;
 
+    private boolean leftMousePressed = false;
+
+    private boolean rightMousePressed = false;
+
     public Canvas(Dimension resolution) {
         super();
         System.out.println(resolution);
@@ -32,8 +36,14 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
                     graphics.setColor(new Color(1, 1, 1, 1));
                     graphics.fillRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
                 }
-                else {
+                else if (data[i][j] == 1) {
                     graphics.setColor(Color.WHITE);
+                    graphics.fillRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
+                }
+                else {
+                    graphics.setColor(Color.GRAY);
                     graphics.fillRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
                     graphics.setColor(Color.BLACK);
                     graphics.drawRect(rectPos.width, rectPos.height, resolution.width, resolution.height);
@@ -66,6 +76,11 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         return new Dimension(canvasSize.width / resolution.width, canvasSize.height / resolution.height);
     }
 
+    public void clearCanvas() {
+        this.data = new int[data.length][data[0].length];
+        repaint();
+    }
+
 
     public int[][] getData() {
         return data.clone();
@@ -76,7 +91,8 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         var pos = new Dimension(e.getX(), e.getY());
         var index = translateBackPos(pos);
         if (index.width < 0 || index.width >= data.length || index.height < 0 || index.height >= data[0].length) return;
-        data[index.width][index.height] = mouseMode ? 0 : 1;
+        int color = rightMousePressed ? 2 : leftMousePressed ? 1 : 0;
+        data[index.width][index.height] = mouseMode ? 0 : color;
         repaint();
     }
 
@@ -90,12 +106,15 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
         var pos = new Dimension(e.getX(), e.getY());
         var index = translateBackPos(pos);
         if (index.width < 0 || index.width >= data.length || index.height < 0 || index.height >= data[0].length) return;
-        data[index.width][index.height] = data[index.width][index.height] == 1 ? 0 : 1;
+        int color = e.getButton() == MouseEvent.BUTTON1 ? 1 : e.getButton() == MouseEvent.BUTTON3 ? 2 : 0;
+        data[index.width][index.height] = data[index.width][index.height] == 0 ? color : 0;
         repaint();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) leftMousePressed = true;
+        if (e.getButton() == MouseEvent.BUTTON3) rightMousePressed = true;
         var index = translateBackPos(new Dimension(e.getX(), e.getY()));
         if (index.width < 0 || index.width >= data.length || index.height < 0 || index.height >= data[0].length) return;
         mouseMode = data[index.width][index.height] != 0;
@@ -103,7 +122,8 @@ public class Canvas extends JPanel implements MouseMotionListener, MouseListener
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        if (e.getButton() == MouseEvent.BUTTON1) leftMousePressed = false;
+        if (e.getButton() == MouseEvent.BUTTON3) rightMousePressed = false;
     }
 
     @Override
