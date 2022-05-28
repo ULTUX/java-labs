@@ -98,7 +98,7 @@ public class MainFrame extends JFrame {
     private void handleExport() {
         var data = canvas.getData();
         try {
-            var fileName = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace(":","_").replace("+", "_");
+            var fileName = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace(":", "_").replace("+", "_");
             var fileOut = new ObjectOutputStream(new FileOutputStream(fileName + ".cas"));
             fileOut.writeObject(data);
             JOptionPane.showMessageDialog(this, "Succesfully exported snapshot to file: " + fileName, "Export", JOptionPane.INFORMATION_MESSAGE);

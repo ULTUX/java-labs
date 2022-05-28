@@ -1,7 +1,16 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.graalvm.plugin.compiler' version '0.1.0-alpha2'
+
 }
+
+ext.graalVersion = '22.1.0'
+
+graal {
+    version = "$graalVersion"
+}
+
 
 application {
     mainClass = 'pl.edu.pwr.lab12.MainFrame'
@@ -21,14 +30,21 @@ sourceSets {
     }
 }
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes 'Main-Class': 'pl.edu.pwr.lab12.MainFrame'
     }
     from {
         configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it)}
     }
+
 }
 dependencies {
     implementation 'com.formdev:flatlaf:2.2'
     implementation group: 'com.intellij', name: 'forms_rt', version: '7.0.3'
+    implementation "org.graalvm.sdk:graal-sdk:$graalVersion"
+    implementation "org.graalvm.js:js:$graalVersion"
+    implementation "org.graalvm.js:js-scriptengine:$graalVersion"
+
+
 }
