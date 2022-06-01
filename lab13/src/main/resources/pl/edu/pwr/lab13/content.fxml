@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://java.sun.com/JSP/Page"
+            prefHeight="400.0" prefWidth="600.0">
+    <fx:include source="MainFrame.fxml" charset="utf-8"/>
+
+</VBox>

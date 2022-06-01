@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="vbox" layoutX="10.0" layoutY="10.0" prefHeight="320.0" prefWidth="309.0" spacing="10" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <fx:script>
+    </fx:script>
+
+    <Label fx:id="inputLbl" alignment="CENTER_LEFT" cache="true" cacheHint="SCALE" prefHeight="30.0" prefWidth="200.0" text="Invitation generator" textAlignment="LEFT" />
+    <ComboBox fx:id="combox" prefHeight="26.0" prefWidth="227.0" promptText="Select template to generate from" />
+    <Separator prefWidth="200.0" />
+    <Label text="Please provide all necessary information separated by |">
+        <VBox.margin>
+            <Insets />
+        </VBox.margin>
+    </Label>
+    <Label fx:id="requiredLabel" prefHeight="17.0" prefWidth="220.0" text="Required information:" visible="false" />
+    <Label fx:id="tipLabel" />
+    <TextField fx:id="inputText" prefWidth="100.0" />
+    <Button fx:id="okBtn" alignment="CENTER_RIGHT" contentDisplay="CENTER" disable="true" mnemonicParsing="false" text="Generate invite" textAlignment="CENTER" />
+    <Separator prefWidth="200.0" />
+
+    <Label fx:id="outputLbl" alignment="CENTER_LEFT" cache="true" cacheHint="SCALE" prefHeight="30.0" prefWidth="200.0" text="Output" textAlignment="LEFT" />
+    <TextArea fx:id="outputText" editable="false" prefHeight="100.0" prefWidth="200.0" wrapText="true">
+      <font>
+         <Font size="24.0" />
+      </font></TextArea>
+
+    <fx:script>
+        var System = Java.type("java.lang.System")
+        var ResourceBundle = Java.type("java.util.PropertyResourceBundle");
+        var jString = Java.type("java.lang.String");
+        var Object = Java.type("java.lang.Object");
+        var FileInputStream = Java.type("java.io.FileInputStream");
+        var template = new ResourceBundle(new FileInputStream("test.properties"));
+        var keys = template.getKeys();
+        var observ = Java.type("javafx.collections.FXCollections");
+        var templates = [];
+        var MessageFormat = Java.type("java.text.MessageFormat");
+        var text = null;
+        var Arrays = Java.type("java.util.Arrays");
+
+        combox.onAction = updateCombo;
+        okBtn.onAction = buttonAction;
+
+        while (keys.hasMoreElements()) {
+            var key = keys.nextElement();
+            if (key.split("\.")[2].equals(new jString("text"))) {
+                templates.push(key.split("\.")[1]);
+            }
+        }
+
+        combox.setItems(observ.observableArrayList(templates));
+
+        function getTip(key) {
+            return template.getString(new jString("template." + key + ".tip"));
+        }
+
+        function getText(key) {
+            return template.getString(new jString("template." + key + ".text"));
+        }
+
+        function buttonAction(event) {
+            var array = inputText.text.split("|")
+            var msgFormat = new MessageFormat(text);
+            var out = msgFormat.format(Java.to(array, "java.lang.Object[]"));
+            outputText.text = out;
+        }
+
+        function updateCombo(event) {
+            var tip = getTip(combox.getValue());
+            text = getText(combox.getValue());
+            tipLabel.text = tip;
+            okBtn.disable = false;
+            requiredLabel.visible = true;
+        }
+
+    </fx:script>
+</VBox>
