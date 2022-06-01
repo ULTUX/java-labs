@@ -1,4 +1,4 @@
-# Lab 13 --- Raport
+# Lab 13 - Raport
 
 ## Jak uruchonmić?
 Program używa Gradle do generowania wszystkich odpowiednich plików oraz zaraządzania środowiskiem uruchomienonwym.
