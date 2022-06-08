@@ -8,12 +8,13 @@ import javax.management.*;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
-public class LightUI extends JFrame {
+public class LightUI extends JFrame implements NotificationListener {
 
     private JPanel mainPanel;
     private JButton initButton;
@@ -34,15 +35,22 @@ public class LightUI extends JFrame {
     private static final int LIGHT_COUNT = 9;
 
     public static void main(String[] args) {
+
+
         FlatDarkLaf.setup();
         try {
             ObjectName objectName = new ObjectName("pl.edu.pwr.lab14.ui:type=basic,name=lightdriver");
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-            server.registerMBean(new LightDriver(new LightUI()), objectName);
+            var listener = new LightUI();
+            var bean = new LightDriver(listener);
+            bean.addNotificationListener(listener, null, null);
+            server.registerMBean(bean, objectName);
         } catch (MalformedObjectNameException | NotCompliantMBeanException | InstanceAlreadyExistsException |
                  MBeanRegistrationException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public LightUI() {
@@ -134,6 +142,11 @@ public class LightUI extends JFrame {
         canvas.toggleLight(lightId);
     }
 
+    public boolean getSimulationState() {
+        if (simulation == null || simulation.isShutdown()) return false;
+        return true;
+    }
+
     public void toggleSimulation() {
         if (sequence == null) return;
         if (simulation == null || simulation.isShutdown()){
@@ -154,5 +167,14 @@ public class LightUI extends JFrame {
             setPreferredSize(new Dimension(newSize.width+10, 230));
             pack();
         });
+    }
+
+    public boolean getLightState(int lightId) {
+        return canvas.getLightState(lightId);
+    }
+
+    @Override
+    public void handleNotification(Notification notification, Object handback) {
+        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "New notification: "+notification.getMessage(), "Notification", JOptionPane.INFORMATION_MESSAGE));
     }
 }

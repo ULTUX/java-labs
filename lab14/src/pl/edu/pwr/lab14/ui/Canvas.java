@@ -60,4 +60,8 @@ public class Canvas extends JPanel {
     public int getCurrentLightCount() {
         return lightStates.length;
     }
+
+    public boolean getLightState(int lightId) {
+        return lightStates[lightId];
+    }
 }
