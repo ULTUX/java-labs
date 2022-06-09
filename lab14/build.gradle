@@ -1,0 +1,23 @@
+
+
+plugins {
+    id 'java'
+}
+
+group 'pl.edu.pwr.lab14'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+dependencies {
+    compile 'junit:junit:4.12'
+}
