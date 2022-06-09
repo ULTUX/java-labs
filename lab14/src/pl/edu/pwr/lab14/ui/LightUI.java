@@ -82,7 +82,6 @@ public class LightUI extends JFrame implements NotificationListener {
         var id = getIntUserInput("Provide light id to toggle");
         if (id == -1) return;
         bean.toggleLight(id);
-
     }
 
     private void handleSetInterval() {
