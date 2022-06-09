@@ -2,6 +2,13 @@
 
 plugins {
     id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+
+}
+
+application {
+    mainClass = "pl.edu.pwr.lab14.ui.LightUI"
 }
 
 group 'pl.edu.pwr.lab14'
@@ -18,6 +25,15 @@ sourceSets {
         }
     }
 }
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'pl.edu.pwr.lab14.ui.LightUI'
+    }
+}
+
 dependencies {
-    compile 'junit:junit:4.12'
+    implementation("com.formdev:flatlaf:2.3")
+    implementation('com.intellij:forms_rt:7.0.3')
 }
