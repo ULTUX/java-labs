@@ -13,11 +13,9 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
 
 public class LightUI extends JFrame implements NotificationListener {
 
@@ -27,6 +25,7 @@ public class LightUI extends JFrame implements NotificationListener {
     private JButton setSequenceButton;
     private JButton setLightCountButton;
     private JButton setIntervalButton;
+    private JButton toggleLightButton;
     private Canvas canvas;
     private ScheduledExecutorService simulation;
     private LightSequence sequence;
@@ -76,6 +75,14 @@ public class LightUI extends JFrame implements NotificationListener {
         setSequenceButton.addActionListener(e -> handleSetSequence());
         setLightCountButton.addActionListener(e -> handleSetLightCount());
         setIntervalButton.addActionListener(e -> handleSetInterval());
+        toggleLightButton.addActionListener(e -> handleToggleLight());
+    }
+
+    private void handleToggleLight() {
+        var id = getIntUserInput("Provide light id to toggle");
+        if (id == -1) return;
+        bean.toggleLight(id);
+
     }
 
     private void handleSetInterval() {
@@ -209,8 +216,8 @@ public class LightUI extends JFrame implements NotificationListener {
         setSequenceButton.setText("Set sequence");
         panel1.add(setSequenceButton, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         toggleButton = new JButton();
-        toggleButton.setText("Toggle");
-        panel1.add(toggleButton, new GridConstraints(1, 2, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        toggleButton.setText("Toggle sim");
+        panel1.add(toggleButton, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
@@ -222,6 +229,9 @@ public class LightUI extends JFrame implements NotificationListener {
         initButton = new JButton();
         initButton.setText("Init");
         panel1.add(initButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, 1, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        toggleLightButton = new JButton();
+        toggleLightButton.setText("Toggle light");
+        panel1.add(toggleLightButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -230,4 +240,5 @@ public class LightUI extends JFrame implements NotificationListener {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
+
 }
