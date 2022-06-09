@@ -3,6 +3,7 @@
 .root {
     -fx-padding: 10;
     -fx-background-color: #000000;
+    -fx-font-family: Arial;
 }
 
 .combo-box {
@@ -22,28 +23,28 @@
 }
 .label {
     -fx-font-size: 11pt;
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-family: Arial;
     -fx-text-fill: white;
     -fx-opacity: 0.6;
 }
 
 .label-bright {
     -fx-font-size: 11pt;
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-family: Arial;
     -fx-text-fill: white;
     -fx-opacity: 1;
 }
 
 .label-header {
     -fx-font-size: 32pt;
-    -fx-font-family: "Segoe UI Light";
+    -fx-font-family: Arial;
     -fx-text-fill: white;
     -fx-opacity: 1;
 }
 
 .text-field {
     -fx-font-size: 12pt;
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-family: Arial;
 }
 
 .button {
@@ -52,7 +53,7 @@
     -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: #000cff;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: Arial;
     -fx-font-size: 11pt;
     -fx-text-fill: #ffffff;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
@@ -73,7 +74,6 @@
 .button:focused {
     -fx-border-color: white, white;
     -fx-border-width: 1, 1;
-    -fx-border-style: solid, segments(1, 1);
     -fx-border-radius: 0, 0;
     -fx-border-insets: 1 1 1 1, 0;
 }
@@ -91,4 +91,5 @@
 .text-area {
     -fx-background-color: #545454;
     -fx-font-size: 20px;
+    -fx-font-family: Arial;
 }

@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import pl.edu.pwr.lab14.LightDriver;
+import pl.edu.pwr.lab14.LightDriverMBean;
 import pl.edu.pwr.lab14.LightSequence;
 
 import javax.management.*;
@@ -38,27 +39,30 @@ public class LightUI extends JFrame implements NotificationListener {
 
     private static final int LIGHT_COUNT = 9;
 
+    private final LightDriverMBean bean;
+
     public static void main(String[] args) {
 
 
         FlatDarkLaf.setup();
-        try {
-            ObjectName objectName = new ObjectName("pl.edu.pwr.lab14.ui:type=basic,name=lightdriver");
-            MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-            var listener = new LightUI();
-            var bean = new LightDriver(listener);
-            bean.addNotificationListener(listener, null, null);
-            server.registerMBean(bean, objectName);
-        } catch (MalformedObjectNameException | NotCompliantMBeanException | InstanceAlreadyExistsException |
-                 MBeanRegistrationException e) {
-            e.printStackTrace();
-        }
-
+        new LightUI();
 
     }
 
     public LightUI() {
         super("Light simulation");
+
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+
+        bean = new LightDriver(this);
+        ((LightDriver) bean).addNotificationListener(this, null, null);
+        try {
+            ObjectName objectName = new ObjectName("pl.edu.pwr.lab14.ui:type=basic,name=lightdriver");
+            server.registerMBean(bean, objectName);
+        } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException |
+                 MalformedObjectNameException e) {
+            JOptionPane.showMessageDialog(this, "Could not initialize bean.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.canvas = new Canvas(CANVAS_SIZE, LIGHT_COUNT, mainPanel);
         mainPanel.add(canvas);
         mainPanel.setPreferredSize(CANVAS_SIZE);
@@ -67,8 +71,8 @@ public class LightUI extends JFrame implements NotificationListener {
         setVisible(true);
         pack();
 
-        initButton.addActionListener(e -> initializeSequence());
-        toggleButton.addActionListener(e -> toggleSimulation());
+        initButton.addActionListener(e -> bean.initializeSequence());
+        toggleButton.addActionListener(e -> bean.toggleSimulation());
         setSequenceButton.addActionListener(e -> handleSetSequence());
         setLightCountButton.addActionListener(e -> handleSetLightCount());
         setIntervalButton.addActionListener(e -> handleSetInterval());
@@ -79,7 +83,7 @@ public class LightUI extends JFrame implements NotificationListener {
         if (minInterval == -1) return;
         var maxInterval = getIntUserInput("New max interval");
         if (maxInterval == -1) return;
-        setSimulationInterval(minInterval, maxInterval);
+        bean.changeSimulationInterval(minInterval, maxInterval);
     }
 
     public void setSimulationInterval(int minInterval, int maxInterval) {
@@ -90,13 +94,9 @@ public class LightUI extends JFrame implements NotificationListener {
     }
 
     private void handleSetLightCount() {
-        var count = JOptionPane.showInputDialog(this, "What new light count should be?", "Light count input", JOptionPane.QUESTION_MESSAGE);
-        if (count == null || count.trim().equals("")) return;
-        try {
-            setLightCount(Integer.parseInt(count));
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Provided input is not integer", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        var count = getIntUserInput("What new light count should be?");
+        if (count == -1) return;
+        bean.changeLightCount(count);
     }
 
     private int getIntUserInput(String message) {
@@ -114,7 +114,7 @@ public class LightUI extends JFrame implements NotificationListener {
         try {
             var input = JOptionPane.showInputDialog(this, "Please provide new sequence for lights", "Sequence input", JOptionPane.QUESTION_MESSAGE);
             if (input == null || input.trim().equals("")) return;
-            setSequence(input);
+            bean.setSequence(input);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Provided input is not valid", "Error", JOptionPane.ERROR_MESSAGE);
         }
